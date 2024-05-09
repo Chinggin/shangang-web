@@ -484,13 +484,18 @@
               </template>
             </el-table-column>
           </el-table>
-
+          <!-- <pagination
+        v-show="!loading && tableData.length"
+        :total="total"
+        :pageNum="queryParams.pageInfo.pageNum"
+        :limit="queryParams.pageInfo.pageSize"
+        @pagination="getAccessTypeList"
+      /> -->
           <!--分页-->
           <pagination
-            v-if="!loading && tableData.length"
             :total="totalNum"
-            v-model:pageNum="pageNum"
-            v-model:limit="pageSize"
+            :pageNum="pageNum"
+            :limit="pageSize"
             @pagination="getListByPage"
           ></pagination>
         </div>
@@ -1014,10 +1019,14 @@ export default {
     },
 
     // 加载设备列表 ！
-    getMainDevList() {
+    getMainDevList(e) {
+      console.log(e)
       if (this.organizationId !== undefined) {
         this.dataText = ''
         this.loading = true
+        if(e){
+          this.pageNum = e.pageNum
+        }
         let data = {
           pageInfo: {
             pageNum: this.pageNum,
@@ -1055,6 +1064,8 @@ export default {
         this.dataText = this.$t('public.noData')
       }
       this.loading = false
+
+      console.log(this.totalNum,this.pageNum,this.pageSize)
     },
 
     // 监控平台 !
@@ -1804,9 +1815,9 @@ deviceRegister(val){
     },
 
     // 分页
-    getListByPage() {
+    getListByPage(e) {
       this.search_clear()
-      this.getMainDevList()
+      this.getMainDevList(e)
     },
     //excel 中文转 value
     setMainDevTypeEX(val) {

@@ -421,7 +421,10 @@ export default {
       this.queryParams.accessPlatType = ''
     },
 
-    async getList() {
+    async getList(e) {
+      if(e){
+      this.queryParams.pageInfo.pageNum = e.pageNum
+    }
       this.loading = true
       let obj = {
         pageInfo: this.queryParams.pageInfo,
@@ -433,6 +436,7 @@ export default {
             this.queryParams.accessPlatType !== '' ? this.queryParams.accessPlatType[1] : null
         }
       }
+      console.log(11111)
       let res = await this.$api.selectAdapterGateways(obj)
       if (res.resultCode == 0) {
         this.tableData = this.handleListData(res.gatewayList)
