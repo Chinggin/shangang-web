@@ -422,14 +422,11 @@ export default {
       this.$store.commit('menu/set_options')
       this.$store.commit('menu/clear_cached_views')
       this.$router.push({
-        path: '/homepage'
+        path: '/realtime-play',
       })
-
-
-
     },
     submitForm(formName) {
-      console.log('123');
+      console.log('123')
       if (!this.ruleForm.username) {
         this.$notify({
           title: this.$t('login.waring'),
