@@ -5,7 +5,7 @@
     <div class="login">
       <!-- title -->
       <div class="login-title">
-         山港一体化可视平台
+        山港一体化可视平台
         <!--语言切换-->
         <!-- <div class="language">
           <el-select
@@ -24,57 +24,35 @@
         <!-- username -->
         <el-form-item prop="username" class="user">
           <img class="usernameImg" src="../../assets/login/longinUsername.png" alt />
-          <el-input
-            type="text"
-            v-model="ruleForm.username"
-            autocomplete="off"
-            class="username"
-            :placeholder="$t('login.accountPrompt')"
-          ></el-input>
+          <el-input type="text" v-model="ruleForm.username" autocomplete="off" class="username"
+            :placeholder="$t('login.accountPrompt')"></el-input>
         </el-form-item>
         <!-- password -->
         <el-form-item prop="password" class="pwd">
           <img class="passwordImg" src="../../assets/login/longinPassword.png" alt />
-          <el-input
-            type="password"
-            v-model="ruleForm.password"
-            autocomplete="off"
-            class="password"
-            @keydown.native.enter="submitForm('loginForm')"
-            :placeholder="$t('login.psdPrompt')"
-          ></el-input>
+          <el-input type="password" v-model="ruleForm.password" autocomplete="off" class="password"
+            @keydown.native.enter="submitForm('loginForm')" :placeholder="$t('login.psdPrompt')"></el-input>
         </el-form-item>
         <!-- //验证码 -->
         <div class="verify-form">
-          <el-input
-            type="text"
-            autocomplete="off"
-            class="input-verify"
-            :placeholder="$t('login.inputVerifyCode')"
-            v-model="ruleForm.verifyCode"
-          ></el-input>
+          <el-input type="text" autocomplete="off" class="input-verify" :placeholder="$t('login.inputVerifyCode')"
+            v-model="ruleForm.verifyCode"></el-input>
           <!-- <div class="verify">zzzz</div> -->
           <img :src="verifyImg" alt class="verify" @click="changeVerifyImg" />
         </div>
 
         <!-- <el-checkbox-group > -->
         <el-form-item class="login-checkbox">
-          <el-checkbox
-            :label="$t('login.showMap')"
-            @change="isRememberPwd"
-            v-model="showimg"
-            class="rememberPwd-btn"
-          ></el-checkbox>
+          <el-checkbox :label="$t('login.showMap')" @change="isRememberPwd" v-model="showimg"
+            class="rememberPwd-btn"></el-checkbox>
         </el-form-item>
-        <div class="agencyChecked" >
+        <div class="agencyChecked">
           <el-checkbox v-model="agencyChecked" @change="agencyCheckedFn">{{ $t('login.proxy') }}</el-checkbox>
         </div>
         <div class="button-form">
-          <el-button type="primary" @click="resetForm('loginForm')" class="reset_btn"
-            >{{ $t('login.reset') }}
+          <el-button type="primary" @click="resetForm('loginForm')" class="reset_btn">{{ $t('login.reset') }}
           </el-button>
-          <el-button type="primary" @click="submitForm('loginForm')" class="login_btn"
-            >{{ $t('login.login') }}
+          <el-button type="primary" @click="submitForm('loginForm')" class="login_btn">{{ $t('login.login') }}
           </el-button>
           <!-- <el-button type="primary" @click="exitFlag=true" class="logout_btn">退出</el-button> -->
         </div>
@@ -89,10 +67,7 @@
       </div>-->
     </div>
     <el-form style="display: flex; justify-content: space-between; width: 400px; margin: 0 auto">
-      <div
-        class="senior-set"
-        v-if="flag"
-        style="
+      <div class="senior-set" v-if="flag" style="
           width: 400px;
           display: flex;
           justify-content: space-between;
@@ -100,25 +75,13 @@
           align-self: center;
           box-sizing: border-box;
           margin-top: 9px;
-        "
-      >
+        ">
         <!-- <el-input type="text" autocomplete="off" class="serverAdd" placeholder="请输入服务器地址" v-model="ruleForm.serverAdd"></el-input>
         <el-input type="text" autocomplete="off" class="port" placeholder="请输入端口" v-model="ruleForm.port" style="width:160px"></el-input>-->
-        <el-input
-          type="text"
-          autocomplete="off"
-          class="serverAdd"
-          :placeholder="$t('login.inputServerAdd')"
-          v-model="ruleForm.serverAdd"
-        ></el-input>
-        <el-input
-          type="text"
-          autocomplete="off"
-          class="port"
-          :placeholder="$t('login.inputPort')"
-          v-model="ruleForm.port"
-          style="width: 160px"
-        ></el-input>
+        <el-input type="text" autocomplete="off" class="serverAdd" :placeholder="$t('login.inputServerAdd')"
+          v-model="ruleForm.serverAdd"></el-input>
+        <el-input type="text" autocomplete="off" class="port" :placeholder="$t('login.inputPort')"
+          v-model="ruleForm.port" style="width: 160px"></el-input>
       </div>
     </el-form>
     <!-- <div class="exit" v-if="exitFlag">
@@ -160,13 +123,8 @@
               <div class="plugInDownload">
                 <img class="plugInImg" src="../../assets/login/downApp.png" alt />
                 <span class="topDownload">APP</span>
-                <el-popover
-                  placement="left"
-                  :title="$t('worktable.APP')"
-                  popper-class="code-popover"
-                  width="250"
-                  trigger="click"
-                >
+                <el-popover placement="left" :title="$t('worktable.APP')" popper-class="code-popover" width="250"
+                  trigger="click">
                   <span slot="reference" class="rightDownload">{{ $t('patrol.check') }}</span>
                   <img class="codeImg" src="@/views/mini/pages/myTask/img/android.png" alt="" />
                 </el-popover>
@@ -188,7 +146,7 @@ import { crypto } from '@/utils/crypto'
 import {
   selectMenus,
   getFlavor,
-  selectUserPermissions ,
+  selectUserPermissions,
   selectMenuPerms,
   getOrganizationSubType,
   xgIpInRedis,
@@ -197,7 +155,7 @@ import {
   getProductInfo,
 } from '@/utils/api.js'
 import { generateMixed } from '@/utils/mutil'
-import { mapActions ,mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -304,8 +262,8 @@ export default {
     //   cuType = '5'
     // }
     const clientNonces = getClientNonce(4)
-      sessionStorage.setItem('cuType', cuType)
-      this.$store.dispatch('auth/setClientNonce', clientNonces)
+    sessionStorage.setItem('cuType', cuType)
+    this.$store.dispatch('auth/setClientNonce', clientNonces)
     if (this.userId) {
       this.$fetch('/uas/v1/api/scs/screen/user/info', {
         userId: this.userId,
@@ -392,16 +350,16 @@ export default {
       this.$store.dispatch('auth/setAccessToken', '')
       window.location.reload()
     },
-        //用户权限列表
-        async getUserPermissions() {
-     await selectUserPermissions({}).then(res => {
+    //用户权限列表
+    async getUserPermissions() {
+      await selectUserPermissions({}).then(res => {
         if (res.resultCode == 0) {
           sStorage.set('userPermList', res.permList)
         }
       })
     },
     // 获取菜单权限列表
-    async  getMenuPermsList() {
+    async getMenuPermsList() {
       await selectMenuPerms({}).then((res) => {
         if (res.resultCode === 0) {
           console.log('res.menuPermList', res)
@@ -446,7 +404,7 @@ export default {
       // localStorage.setItem("showimg", this.showimg)
       // this.flag_pwd = !this.flag_pwd;
     },
-        // 初始化获取水印是否开启
+    // 初始化获取水印是否开启
     //     async getWatermarkList() {
     //   const res = await getContentWatermarkInfo({})
     //   if (res.resultCode !== 0 || !res.watermarkInfo) return
@@ -467,7 +425,7 @@ export default {
         path: '/homepage'
       })
 
-    
+
 
     },
     submitForm(formName) {
@@ -498,7 +456,7 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let { username, password ,agentType,captcha} = this.ruleForm
+          let { username, password, agentType, captcha } = this.ruleForm
           this.userLogin({
             username,
             password,
@@ -642,7 +600,7 @@ export default {
                 return
               }
             }
-            
+
           } else {
             this.changeVerifyImg()
           }
@@ -699,6 +657,7 @@ body {
   width: 100%;
   height: 100%;
 }
+
 // 下载
 .downloadLogin {
   display: flex;
@@ -816,6 +775,7 @@ body {
   font-size: 14px;
   position: relative;
   box-sizing: border-box;
+
   .login-bg {
     position: absolute;
     top: 0;
@@ -855,12 +815,14 @@ body {
   text-shadow: 0px 8px 12px rgba(3, 111, 107, 0.78);
   opacity: 1;
   position: relative;
+
   //语言处理
   .language {
     color: #ffffff;
     position: absolute;
     right: -120px;
     top: -10px;
+
     ::v-deep.el-input__inner {
       width: 110px;
       height: 30px;
@@ -1091,7 +1053,7 @@ div.exit button.cancel {
   margin-left: 83px;
 }
 
-.login .el-checkbox__input.is-checked + .el-checkbox__label {
+.login .el-checkbox__input.is-checked+.el-checkbox__label {
   color: #ffffff;
 }
 
@@ -1223,7 +1185,7 @@ div.senior-set-btn-form i {
   color: #ffffff;
 }
 
-.login .el-checkbox__input.is-checked + .el-checkbox__label {
+.login .el-checkbox__input.is-checked+.el-checkbox__label {
   color: #ffffff;
 }
 
@@ -1259,9 +1221,11 @@ div.senior-set-btn-form i {
 .code-popover {
   background: #0b435b;
   border: 1px solid #14678b;
+
   .el-popover__title {
     color: #fff;
   }
+
   .codeImg {
     width: 210px;
   }

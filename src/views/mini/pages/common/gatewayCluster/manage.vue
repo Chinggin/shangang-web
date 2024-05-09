@@ -1,11 +1,6 @@
 <template>
-  <div
-    id="gateway-cluster"
-    class='base'
-    ref="gatewayCluster"
-    v-loading="pageloading"
-    :element-loading-text="$t('public.batchImporting')"
-  >
+  <div id="gateway-cluster" class='base' ref="gatewayCluster" v-loading="pageloading"
+    :element-loading-text="$t('public.batchImporting')">
     <!-- 查询和其他操作 -->
     <div v-has-permi="[93]" class="btnMargin">
       <el-button type="primary" @click="autoHandleAdd" :loading="autoAddLoading">
@@ -18,46 +13,24 @@
     </div>
 
     <div class="search-form">
-      <el-form
-        :inline="true"
-        class="demo-form-inline"
-        :label-width="locale == 'en' ? '120px' : '110px'"
-        ref="form"
-        :model="queryParams"
-        label-position="left"
-      >
+      <el-form :inline="true" class="demo-form-inline" :label-width="locale == 'en' ? '120px' : '110px'" ref="form"
+        :model="queryParams" label-position="left">
         <div class="flexstart">
           <el-form-item :label="$t('gatewayCluster.gatewayName') + ':'">
-            <el-input
-              v-model="queryParams.gatewayName"
-              :placeholder="$t('gatewayCluster.gatewayNamePrompt')"
-              clearable
-            ></el-input>
+            <el-input v-model="queryParams.gatewayName" :placeholder="$t('gatewayCluster.gatewayNamePrompt')"
+              clearable></el-input>
           </el-form-item>
           <el-form-item :label="$t('gatewayCluster.gatewayStatus') + ':'">
-            <el-select
-              v-model="queryParams.gatewayStatus"
-              clearable
-              :placeholder="$t('gatewayCluster.gatewayStatusPrompt')"
-            >
-              <el-option
-                v-for="(item, index) in gatewayStatusList"
-                :key="index"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.gatewayStatus" clearable
+              :placeholder="$t('gatewayCluster.gatewayStatusPrompt')">
+              <el-option v-for="(item, index) in gatewayStatusList" :key="index" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('gatewayCluster.accessPlatType') + ':'">
-            <el-cascader
-              :options="options"
-              :placeholder="$t('gatewayCluster.accessPlatTypePrompt')"
-              :props="{ expandTrigger: 'hover' }"
-              clearable
-              :show-all-levels="false"
-              v-model="queryParams.accessPlatType"
-              :popper-append-to-body="false"
-            ></el-cascader>
+            <el-cascader :options="options" :placeholder="$t('gatewayCluster.accessPlatTypePrompt')"
+              :props="{ expandTrigger: 'hover' }" clearable :show-all-levels="false"
+              v-model="queryParams.accessPlatType" :popper-append-to-body="false"></el-cascader>
           </el-form-item>
         </div>
         <div class="search-btn">
@@ -75,50 +48,23 @@
         <p>{{ $t('public.noData') }}</p>
       </div>
       <!-- 表格 -->
-      <el-table
-        v-if="!loading && tableData.length"
-        :max-height="tableHeight"
-        :loading="loading"
-        :row-class-name="tableRowClassName"
-        ref="multipleTable"
-        :data="tableData"
-        @selection-change="handleSelectionChange"
-        border
-        :span-method="objSpanMethod"
-      >
-      
+      <el-table v-if="!loading && tableData.length" :max-height="tableHeight" :loading="loading"
+        :row-class-name="tableRowClassName" ref="multipleTable" :data="tableData"
+        @selection-change="handleSelectionChange" border :span-method="objSpanMethod">
+
         <el-table-column label width="50" type="selection" />
-        <el-table-column
-          :label="$t('gatewayCluster.multipleIvsGroupName')"
-          prop="multipleIvsGroupName"
-          show-overflow-tooltip
-        />
-        <el-table-column
-          :label="$t('gatewayCluster.allocationStatus')"
-          prop="allocationStatus"
-          show-overflow-tooltip
-        >
+        <el-table-column :label="$t('gatewayCluster.multipleIvsGroupName')" prop="multipleIvsGroupName"
+          show-overflow-tooltip />
+        <el-table-column :label="$t('gatewayCluster.allocationStatus')" prop="allocationStatus" show-overflow-tooltip>
           <template #default="{ row }">
             <span>
               {{ setAllocationStatus(row.allocationStatus) }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column
-          :label="$t('gatewayCluster.gatewayName')"
-          prop="gatewayName"
-          show-overflow-tooltip
-        />
-        <el-table-column
-          :label="$t('gatewayCluster.gatewayIp1')"
-          prop="gatewayIp"
-          show-overflow-tooltip
-        />
-        <el-table-column
-          :label="$t('gatewayCluster.gatewayPort')"
-          prop="gatewayPort"
-          show-overflow-tooltip
-        />
+        <el-table-column :label="$t('gatewayCluster.gatewayName')" prop="gatewayName" show-overflow-tooltip />
+        <el-table-column :label="$t('gatewayCluster.gatewayIp1')" prop="gatewayIp" show-overflow-tooltip />
+        <el-table-column :label="$t('gatewayCluster.gatewayPort')" prop="gatewayPort" show-overflow-tooltip />
         <el-table-column :label="$t('gatewayCluster.gatewayStatus1')" prop="gatewayStatus">
           <template #default="{ row }">
             <span :class="setStatusClass(row.gatewayStatus)">
@@ -160,30 +106,16 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-        v-show="!loading && tableData.length"
-        :total="total"
-        :pageNum="queryParams.pageInfo.pageNum"
-        :limit="queryParams.pageInfo.pageSize"
-        @pagination="getList"
-      />
+      <pagination v-show="!loading && tableData.length" :total="total" :pageNum="queryParams.pageInfo.pageNum"
+        :limit="queryParams.pageInfo.pageSize" @pagination="getList" />
     </div>
 
     <gateway-cluster-add :operation="operation"></gateway-cluster-add>
     <gateway-cluster-detail></gateway-cluster-detail>
     <!-- 批量操作 -->
-    <batch-operate
-      :multipleSelection="deleteSelection"
-      :what="$t('gatewayCluster.gateway')"
-      @getList="getList"
-      :operate="$t('public.batchDeletionContent')"
-      batchApi="deleteAdapterGatewayInfo"
-      whatId="gatewayId"
-      whatName="gatewayName"
-      v-model:loading="loading"
-      v-model:visible="batchDialogVisible"
-      @searchClear="handleRest"
-    />
+    <batch-operate :multipleSelection="deleteSelection" :what="$t('gatewayCluster.gateway')" @getList="getList"
+      :operate="$t('public.batchDeletionContent')" batchApi="deleteAdapterGatewayInfo" whatId="gatewayId"
+      whatName="gatewayName" v-model:loading="loading" v-model:visible="batchDialogVisible" @searchClear="handleRest" />
   </div>
 </template>
 
@@ -383,7 +315,6 @@ export default {
 
       if (res.resultCode != 0 && !res.accessTypeList.length) return
       this.accessPlatTypeList = res.accessTypeList
-
       let options = []
       for (let i = 0; i < res.accessTypeList.length; i++) {
         let groupobj = {}
@@ -391,6 +322,7 @@ export default {
 
         for (let a = 0; a < resD.dictionaryList.length; a++) {
           if (res.accessTypeList[i].accessTypeCode == resD.dictionaryList[a].value) {
+            console.log(resD.dictionaryList[a].name)
             groupobj.label = resD.dictionaryList[a].name
           }
         }
@@ -599,6 +531,7 @@ export default {
 
         virtualIp: res.virtualIp
       }
+      console.log(this.dataForm)
 
       for (let i = 0; i < this.accessPlatTypeList.length; i++) {
         let firstType = this.accessPlatTypeList[i].accessTypeCode

@@ -1,16 +1,7 @@
 <template>
-  <el-dialog
-    :title="title"
-    :visible.sync="dialogVisible"
-    :top="showFavorites ? '2vh' : '10vh'"
-    :width="showFavorites ? '900px' : '850px'"
-    :close-on-click-modal="false"
-    @open="dialogOpen"
-    @closed="dialogClosed"
-    :modal="false"
-    :draggable="false" 
-    id="camera-selector"
-  >
+  <el-dialog :title="title" :visible.sync="dialogVisible" :top="showFavorites ? '2vh' : '10vh'"
+    :width="showFavorites ? '900px' : '850px'" :close-on-click-modal="false" @open="dialogOpen" @closed="dialogClosed"
+    :modal="false" :draggable="false" id="camera-selector">
     <div class="selector-container">
       <el-row :gutter="20">
         <el-col :span="16">
@@ -18,27 +9,13 @@
             <el-tab-pane :label="$t('alarmList.cameraResources')" name="1">
               <div class="resources-container">
                 <div class="search-container">
-                  <el-input
-                    v-model="searchName"
-                    :placeholder="$t('alarmList.inputCameraNameOrOrgName')"
-                    :maxlength="128"
-                    clearable
-                  />
+                  <el-input v-model="searchName" :placeholder="$t('alarmList.inputCameraNameOrOrgName')"
+                    :maxlength="128" clearable />
                   <div class="search-btns">
-                    <el-button
-                      v-if="!searchName"
-                      type="primary"
-                      class="searchBtn"
-                      @click="searchCamera"
-                    >
+                    <el-button v-if="!searchName" type="primary" class="searchBtn" @click="searchCamera">
                       {{ $t('public.search') }}
                     </el-button>
-                    <el-popover
-                      v-if="searchName"
-                      placement="bottom-end"
-                      trigger="click"
-                      width="350"
-                    >
+                    <el-popover v-if="searchName" placement="bottom-end" trigger="click" width="350">
                       <div v-loading="searchLoading">
                         <div v-if="searchCameraList.length == 0" style="text-align: center">
                           {{ $t('public.noData') }}
@@ -48,20 +25,12 @@
                         </div>
 
                         <ul v-else class="searchedUl">
-                          <li
-                            v-for="(item, index) in searchCameraList"
-                            :key="index"
-                            class="searchedLi"
-                          >
+                          <li v-for="(item, index) in searchCameraList" :key="index" class="searchedLi">
                             <i :class="iconSty_search(item)" />
                             <span class="camera-name" :title="item.label">
                               {{ item.label }}
                             </span>
-                            <el-icon
-                              class="locateIcon"
-                              :title="$t('public.position')"
-                              @click="searchParent(item)"
-                            >
+                            <el-icon class="locateIcon" :title="$t('public.position')" @click="searchParent(item)">
                               <el-icon-location-outline />
                             </el-icon>
                           </li>
@@ -78,34 +47,17 @@
                     </el-button>
                   </div>
                 </div>
-                <div
-                  class="tree-container"
-                  v-loading="zTreeLoading"
-                  :element-loading-text="$t('public.loading')"
-                >
-                  <giant-tree
-                    ref="giantTree"
-                    :nodes="treeData"
-                    :setting="treeSetting"
-                    @onCreated="onTreeCreated"
-                  />
+                <div class="tree-container" v-loading="zTreeLoading" :element-loading-text="$t('public.loading')">
+                  <giant-tree ref="giantTree" :nodes="treeData" :setting="treeSetting" @onCreated="onTreeCreated" />
                 </div>
               </div>
             </el-tab-pane>
             <el-tab-pane :label="$t('favorite.favorite1')" name="2">
               <div class="resources-container">
-                <div
-                  class="tree-container"
-                  style="height: 456px"
-                  v-loading="favoriteTreeLoading"
-                  :element-loading-text="$t('public.loading')"
-                >
-                  <giant-tree
-                    ref="giantTree"
-                    :nodes="favoriteTreeData"
-                    :setting="favoriteTreeSetting"
-                    @onCreated="onFavoriteTreeCreated"
-                  />
+                <div class="tree-container" style="height: 456px" v-loading="favoriteTreeLoading"
+                  :element-loading-text="$t('public.loading')">
+                  <giant-tree ref="giantTree" :nodes="favoriteTreeData" :setting="favoriteTreeSetting"
+                    @onCreated="onFavoriteTreeCreated" />
                 </div>
               </div>
             </el-tab-pane>
@@ -113,27 +65,13 @@
           <div v-else class="resources-container">
             <div class="title">{{ $t('alarmList.cameraResources') }}</div>
             <div class="search-container">
-              <el-input
-                v-model="searchName"
-                :placeholder="$t('alarmList.inputCameraNameOrOrgName')"
-                :maxlength="128"
-                clearable
-              />
+              <el-input v-model="searchName" :placeholder="$t('alarmList.inputCameraNameOrOrgName')" :maxlength="128"
+                clearable />
               <div class="search-btns">
-                <el-button
-                  v-if="!searchName"
-                  type="primary"
-                  class="searchBtn"
-                  @click="searchCamera"
-                >
+                <el-button v-if="!searchName" type="primary" class="searchBtn" @click="searchCamera">
                   {{ $t('public.search') }}
                 </el-button>
-                <el-popover
-                  v-if="searchName"
-                  placement="bottom-end"
-                  trigger="click"
-                  :width="longNav ? 330 : 305"
-                >
+                <el-popover v-if="searchName" placement="bottom-end" trigger="click" :width="longNav ? 330 : 305">
                   <div v-loading="searchLoading">
                     <div v-if="searchCameraList.length == 0" style="text-align: center">
                       {{ $t('public.noData') }}
@@ -148,11 +86,7 @@
                         <span class="camera-name" :title="item.label">
                           {{ item.label }}
                         </span>
-                        <el-icon
-                          class="locateIcon"
-                          :title="$t('public.position')"
-                          @click="searchParent(item)"
-                        >
+                        <el-icon class="locateIcon" :title="$t('public.position')" @click="searchParent(item)">
                           <el-icon-location-outline />
                         </el-icon>
                       </li>
@@ -169,17 +103,8 @@
                 </el-button>
               </div>
             </div>
-            <div
-              class="tree-container"
-              v-loading="zTreeLoading"
-              :element-loading-text="$t('public.loading')"
-            >
-              <giant-tree
-                ref="giantTree"
-                :nodes="treeData"
-                :setting="treeSetting"
-                @onCreated="onTreeCreated"
-              />
+            <div class="tree-container" v-loading="zTreeLoading" :element-loading-text="$t('public.loading')">
+              <giant-tree ref="giantTree" :nodes="treeData" :setting="treeSetting" @onCreated="onTreeCreated" />
             </div>
           </div>
         </el-col>
@@ -187,21 +112,14 @@
           <div class="selected-container">
             <div class="title">
               <label :class="['el-checkbox', checkAll && 'is-checked']">
-                <span
-                  :class="[
-                    'el-checkbox__input',
-                    checkAll && 'is-checked',
-                    isIndeterminate && 'is-indeterminate'
-                  ]"
-                >
+                <span :class="[
+    'el-checkbox__input',
+    checkAll && 'is-checked',
+    isIndeterminate && 'is-indeterminate'
+  ]">
                   <span class="el-checkbox__inner"></span>
-                  <input
-                    aria-hidden="false"
-                    class="el-checkbox__original"
-                    ref="checkAll"
-                    type="checkbox"
-                    @change="handleCheckAll"
-                  />
+                  <input aria-hidden="false" class="el-checkbox__original" ref="checkAll" type="checkbox"
+                    @change="handleCheckAll" />
                 </span>
                 <span class="el-checkbox__label">
                   {{ $t('public.selectedCamera1') }}({{ checkedCameras.length
@@ -209,35 +127,20 @@
                 </span>
               </label>
             </div>
-            <div
-              class="selected-cameras"
-              :style="{
-                height: showFavorites ? '471px' : '456px'
-              }"
-            >
-              <label
-                :class="['el-checkbox', checkedCameras.includes(camera.id) && 'is-checked']"
-                v-for="camera in selectedCameras"
-                :key="camera.id"
-              >
-                <span
-                  :class="[
-                    'el-checkbox__input',
-                    checkedCameras.includes(camera.id) && 'is-checked'
-                  ]"
-                >
+            <div class="selected-cameras" :style="{
+    height: showFavorites ? '471px' : '456px'
+  }">
+              <label :class="['el-checkbox', checkedCameras.includes(camera.id) && 'is-checked']"
+                v-for="camera in selectedCameras" :key="camera.id">
+                <span :class="[
+    'el-checkbox__input',
+    checkedCameras.includes(camera.id) && 'is-checked'
+  ]">
                   <span class="el-checkbox__inner"></span>
-                  <input
-                    aria-hidden="false"
-                    :class="[
-                      'el-checkbox__original',
-                      checkedCameras.includes(camera.id) && 'is-checked'
-                    ]"
-                    type="checkbox"
-                    ref="checkbox"
-                    :value="camera.id"
-                    @change="handleCheckedCamerasChange"
-                  />
+                  <input aria-hidden="false" :class="[
+    'el-checkbox__original',
+    checkedCameras.includes(camera.id) && 'is-checked'
+  ]" type="checkbox" ref="checkbox" :value="camera.id" @change="handleCheckedCamerasChange" />
                 </span>
                 <span class="el-checkbox__label">
                   <span class="checkbox-item-text" :title="camera.name">{{ camera.name }}</span>
@@ -487,7 +390,7 @@ export default {
       this.$nextTick(() => {
         let path = this.$route.path
         if (path.indexOf('/turning') == -1) {
-          
+
         } else {
           let el_dialog_wrapper = document.getElementsByClassName('el-overlay-dialog')[0]
           el_dialog_wrapper.style.width = '100%'
@@ -950,6 +853,7 @@ export default {
   .el-dialog__body {
     padding: 5px 15px;
   }
+
   .title {
     height: 40px;
     line-height: 40px;
@@ -957,30 +861,37 @@ export default {
     text-align: center;
     background-color: #e5e5e5;
   }
+
   .resources-container {
     display: flex;
     flex-direction: column;
     background: #f2f2f2;
+
     .search-container {
       padding: 10px 8px 10px 15px;
       display: flex;
       justify-content: space-between;
+
       .search-btns {
         margin-left: 5px;
         display: flex;
+
         .searchBtn {
           margin-left: 5px;
           height: 36px;
         }
       }
     }
+
     .tree-container {
       padding: 10px 8px 10px 15px;
       flex: 1 0 auto;
       height: 400px;
       overflow: auto;
+
       .ztree {
         height: 100%;
+
         .button.radio_true_full:after,
         .chk.radio_true_full_focus:after,
         .chk.radio_true_part:after,
@@ -988,6 +899,7 @@ export default {
           top: 2px;
           left: 2px;
         }
+
         .button.checkbox_true_part:after,
         .button.checkbox_true_part_focus:after {
           left: 1px;
@@ -995,27 +907,34 @@ export default {
       }
     }
   }
+
   .selected-container {
     background: #f2f2f2;
     overflow: auto;
+
     .el-checkbox__label {
       color: #2d2d2d;
     }
+
     .selected-cameras {
       padding: 10px 8px 10px 15px;
       height: 456px;
       overflow-x: hidden;
       overflow-y: auto;
+
       .el-checkbox {
         display: block;
         padding-bottom: 20px;
+
         &:last-child {
           padding-bottom: 0;
         }
       }
+
       .el-checkbox__label {
         vertical-align: middle;
       }
+
       .checkbox-item-text {
         display: inline-block;
         white-space: nowrap;
@@ -1026,16 +945,19 @@ export default {
       }
     }
   }
+
   .dialog-footer {
     .el-button {
       min-width: 100px;
       margin: 0 90px;
     }
   }
+
   .el-tabs__header .el-tabs__item {
     background: transparent !important;
   }
 }
+
 //定位
 .searchedLi {
   cursor: pointer;
@@ -1044,10 +966,12 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
+
   &:hover {
     background: #175290;
     color: #fff;
   }
+
   .camera-name {
     display: inline-block;
     width: 90%;
@@ -1061,11 +985,13 @@ export default {
   position: absolute;
   right: 0;
 }
+
 .search-container {
   :deep(.el-input) {
     .el-input__wrapper {
       --el-input-border-color: unset;
       background-color: transparent;
+
       .el-input__inner {
         height: 36px;
         line-height: 36px;
@@ -1078,6 +1004,7 @@ export default {
 </style>
 <style lang="scss">
 #camera-selector .selector-container {
+
   .el-input .el-input__wrapper,
   .el-input .el-input__inner,
   .el-input__inner {
@@ -1085,6 +1012,7 @@ export default {
     border: none;
   }
 }
+
 #camera-selector .el-dialog__body {
   padding: 15px !important;
 }

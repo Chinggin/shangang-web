@@ -1,93 +1,54 @@
 <template>
   <div class="image-config config-form" style="overflow-y: auto">
-    <el-form
-      ref="displayForm"
-      :model="displayForm"
-      :rules="displayFormRules"
-      label-position="top"
-      style="height: auto"
-      :disabled="!PermissionCameraManage"
-    >
+    <el-form ref="displayForm" :model="displayForm" :rules="displayFormRules" label-position="top" style="height: auto"
+      :disabled="!PermissionCameraManage">
       <p class="form-title">{{ $t('cameraConfiguration.videoChannel.screenSetting') }}</p>
       <div class="mb-4">
         <span class="text-blue-400">{{ $t('cameraConfiguration.videoChannel.settingTip') }}</span>
       </div>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item
-            :label="$t('cameraConfiguration.videoChannel.brightness')"
-            prop="brightness"
-          >
-            <el-slider
-              v-model="displayForm.brightness"
-              :max="displayMaxNum"
-              show-input
-              @change="submitDisplayForm"
-            ></el-slider>
+          <el-form-item :label="$t('cameraConfiguration.videoChannel.brightness')" prop="brightness">
+            <el-slider v-model="displayForm.brightness" :max="displayMaxNum" show-input
+              @change="submitDisplayForm"></el-slider>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item :label="$t('cameraConfiguration.videoChannel.contrast')" prop="contrast">
-            <el-slider
-              v-model="displayForm.contrast"
-              :max="displayMaxNum"
-              show-input
-              @change="submitDisplayForm"
-            ></el-slider>
+            <el-slider v-model="displayForm.contrast" :max="displayMaxNum" show-input
+              @change="submitDisplayForm"></el-slider>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item :label="$t('cameraConfiguration.videoChannel.hue')" prop="hue">
-            <el-slider
-              v-model="displayForm.hue"
-              :max="displayMaxNum"
-              show-input
-              @change="submitDisplayForm"
-            ></el-slider>
+            <el-slider v-model="displayForm.hue" :max="displayMaxNum" show-input
+              @change="submitDisplayForm"></el-slider>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item
-            :label="$t('cameraConfiguration.videoChannel.saturation')"
-            prop="saturation"
-          >
-            <el-slider
-              v-model="displayForm.saturation"
-              :max="displayMaxNum"
-              show-input
-              @change="submitDisplayForm"
-            ></el-slider>
+          <el-form-item :label="$t('cameraConfiguration.videoChannel.saturation')" prop="saturation">
+            <el-slider v-model="displayForm.saturation" :max="displayMaxNum" show-input
+              @change="submitDisplayForm"></el-slider>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
-    <el-form
-      ref="osdForm"
-      :model="osdForm"
-      :rules="osdFormRules"
-      label-position="top"
-      style="height: auto"
-      :disabled="!PermissionCameraManage"
-    >
+    <el-form ref="osdForm" :model="osdForm" :rules="osdFormRules" label-position="top" style="height: auto"
+      :disabled="!PermissionCameraManage">
       <p class="form-title">{{ $t('cameraConfiguration.videoChannel.osdSetting') }}</p>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-row :gutter="20">
             <el-col :span="4">
               <el-form-item prop="cameraTimeOsdInfo.enableOSDTime">
-                <el-checkbox
-                  v-model="osdForm.cameraTimeOsdInfo.enableOSDTime"
-                  :true-label="1"
-                  :false-label="0"
-                  :disabled="!boardReady || !enabledOsd"
-                  @change="handleEnableOSDTimeChange"
-                >
+                <el-checkbox v-model="osdForm.cameraTimeOsdInfo.enableOSDTime" :true-label="1" :false-label="0"
+                  :disabled="!boardReady || !enabledOsd" @change="handleEnableOSDTimeChange">
                   {{ $t('cameraConfiguration.videoChannel.enableOSDTime') }}
                 </el-checkbox>
               </el-form-item>
@@ -104,47 +65,27 @@
           <el-row :gutter="20" v-for="(item, index) in osdForm.cameraOsdInfoList" :key="index">
             <el-col :span="2">
               <el-form-item :prop="`cameraOsdInfoList.${index}.enableOSDName`">
-                <el-checkbox
-                  v-model="item.enableOSDName"
-                  :disabled="!boardReady || !enabledOsd"
-                  :true-label="1"
-                  :false-label="0"
-                  @change="handleEnableOSDItemChange($event, index)"
-                ></el-checkbox>
+                <el-checkbox v-model="item.enableOSDName" :disabled="!boardReady || !enabledOsd" :true-label="1"
+                  :false-label="0" @change="handleEnableOSDItemChange($event, index)"></el-checkbox>
               </el-form-item>
             </el-col>
             <el-col :span="20">
-              <el-form-item
-                :prop="`cameraOsdInfoList.${index}.osdNameText`"
-                :rules="osdFormRules.osdNameText"
-              >
-                <el-input
-                  v-model.trim="item.osdNameText"
-                  :disabled="!boardReady || !enabledOsd || !item.enableOSDName"
-                  :placeholder="$t('cameraConfiguration.videoChannel.osdNameTextPlaceHolder')"
-                />
+              <el-form-item :prop="`cameraOsdInfoList.${index}.osdNameText`" :rules="osdFormRules.osdNameText">
+                <el-input v-model.trim="item.osdNameText" :disabled="!boardReady || !enabledOsd || !item.enableOSDName"
+                  :placeholder="$t('cameraConfiguration.videoChannel.osdNameTextPlaceHolder')" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row class="text-center">
-            <el-button
-              type="text"
-              v-show="osdForm.cameraOsdInfoList.length < osdTextMaxNum"
-              :disabled="!boardReady || !enabledOsd"
-              @click="handleAddOsdItemClick"
-            >
+            <el-button type="text" v-show="osdForm.cameraOsdInfoList.length < osdTextMaxNum"
+              :disabled="!boardReady || !enabledOsd" @click="handleAddOsdItemClick">
               <svg-icon iconClass="add-input" className="iconClass" />
             </el-button>
           </el-row>
         </el-col>
         <el-col :span="12">
-          <videoDrawboard
-            ref="drawboard"
-            :controls="[]"
-            :video-url="videoUrl"
-            @board-mounted="handleBoardMounted"
-            @object-mouseup="handleObjectMouseUp"
-          />
+          <videoDrawboard ref="drawboard" :controls="[]" :video-url="videoUrl" @board-mounted="handleBoardMounted"
+            @object-mouseup="handleObjectMouseUp" />
         </el-col>
       </el-row>
     </el-form>
@@ -158,11 +99,8 @@
       </el-button>
     </div>
     <div class="empty-wrapper" v-show="!support">
-      <el-empty
-        :image="$parent.emptyImg"
-        :image-size="388"
-        :description="$t('mainDevConfiguration.platformNotSupported')"
-      />
+      <el-empty :image="$parent.emptyImg" :image-size="388"
+        :description="$t('mainDevConfiguration.platformNotSupported')" />
     </div>
   </div>
 </template>
@@ -264,15 +202,15 @@ export default {
           cameraTimeOsdInfo: {
             enableOSDTime: 0,
             timeFormat: 1,
-            rectInfo: {}
+            rectInfo: {},
           },
           cameraOsdInfoList: [
             {
               enableOSDName: 0,
               osdNameText: '',
-              rectInfo: {}
-            }
-          ]
+              rectInfo: {},
+            },
+          ],
         }
         this.osdForm = { ...defaultOsd, ...res1.configItem }
         this.$refs.drawboard?.createPlayer()
@@ -288,9 +226,9 @@ export default {
       if (cameraOsdInfoList.length >= 8) {
         this.$message({
           message: this.$t('cameraConfiguration.videoChannel.osdNameTextMaxNumPrompt', {
-            num: this.osdTextMaxNum
+            num: this.osdTextMaxNum,
           }),
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
@@ -476,6 +414,7 @@ export default {
   padding-right: 10px;
   height: 100%;
   overflow-y: auto;
+
   .el-radio-button__inner {
     background: transparent;
     color: #fffefe;
@@ -483,27 +422,32 @@ export default {
     border-right: 0;
     height: auto;
   }
+
   .el-radio-button:first-child {
     .el-radio-button__inner {
       border-left: 1px solid #0b537e;
     }
   }
+
   .el-radio-button:last-child {
     .el-radio-button__inner {
       border-right: 1px solid #0b537e;
     }
   }
-  .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+
+  .el-radio-button__orig-radio:checked+.el-radio-button__inner {
     background-color: #0e6294;
     border-color: #0e6294;
     -webkit-box-shadow: -1px 0 0 0 #0e6294;
     box-shadow: -1px 0 0 0 #0e6294;
   }
+
   .iconClass {
     display: inline-block;
     font-size: 20px;
     margin-top: -2px;
   }
+
   .el-slider__runway.show-input {
     margin-left: 10px;
   }

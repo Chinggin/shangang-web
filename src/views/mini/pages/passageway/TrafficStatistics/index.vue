@@ -11,8 +11,7 @@
                             <div>
                                 <div>{{ item.label }}</div>
                                 <div class="value">
-                                    <span>{{ statistics[item.prop] }}</span
-                                    >{{ $t('traffic.times') }}
+                                    <span>{{ statistics[item.prop] }}</span>{{ $t('traffic.times') }}
                                 </div>
                             </div>
                         </div>
@@ -59,8 +58,7 @@
                                 {{ item.label }}
                             </div>
                             <div class="staffVal type2">
-                                <span>{{ statistics[item.prop] }}</span
-                                >{{ $t('traffic.times') }}
+                                <span>{{ statistics[item.prop] }}</span>{{ $t('traffic.times') }}
                             </div>
                         </div>
                     </div>
@@ -76,8 +74,7 @@
                                 {{ item.label }}
                             </div>
                             <div class="staffVal type2">
-                                <span>{{ statistics[item.prop] }}</span
-                                >次
+                                <span>{{ statistics[item.prop] }}</span>次
                             </div>
                         </div>
                     </div>
@@ -430,21 +427,27 @@ export default {
     width: 100%;
     color: #fff;
     padding: 30px;
+
     .flex {
         display: flex;
     }
+
     .side {
         padding: 10px;
     }
+
     &-left {
         width: 33.3%;
     }
+
     &-middle {
         width: 33.3%;
     }
+
     &-right {
         width: 33.3%;
     }
+
     .item {
         width: 100%;
         height: 300px;
@@ -454,22 +457,27 @@ export default {
         border-radius: 4px;
         font-size: 14px;
         overflow: hidden;
+
         &.tall {
             height: 620px;
         }
+
         &.short {
             height: 300px;
         }
+
         &-con {
             width: 100%;
             height: 100%;
             padding: 20px;
             display: flex;
         }
+
         .con1 {
             flex-wrap: wrap;
             justify-content: space-between;
             padding: 40px 40px 20px;
+
             .radius {
                 width: 30%;
                 height: 100px;
@@ -477,17 +485,21 @@ export default {
                 align-items: flex-start;
                 flex-direction: row;
                 justify-content: flex-start;
+
                 img {
                     width: 18px;
                     height: 18px;
                     margin-top: 2px;
                     margin-right: 10px;
                 }
-                > div {
+
+                >div {
                     font-size: 16px;
                     color: #f3fffe;
+
                     .value {
                         margin-top: 24px;
+
                         span {
                             margin-top: 20px;
                             color: #00ffff;
@@ -498,6 +510,7 @@ export default {
                 }
             }
         }
+
         .con2 {
             justify-content: space-around;
             align-items: center;
@@ -508,25 +521,30 @@ export default {
                 font-size: 20px;
                 color: #26b0ff;
                 position: relative;
+
                 .staffVal {
                     margin-top: 20px;
                     position: relative;
                     height: 58px;
                     line-height: 58px;
+
                     span {
                         font-size: 28px;
                         color: #26e3ff;
                         margin-right: 10px;
                     }
                 }
+
                 .label {
                     text-align: left;
+
                     img {
                         vertical-align: middle;
                         width: 20px;
                         height: 20px;
                     }
                 }
+
                 &:first-child::after {
                     content: '';
                     height: 50px;
@@ -538,14 +556,17 @@ export default {
                 }
             }
         }
+
         .con21 {
             justify-content: space-around;
             align-items: flex-start;
+
             .deviceBox {
                 text-align: center;
                 width: 30%;
                 height: 60%;
                 position: relative;
+
                 &:first-child::after {
                     content: '';
                     width: 1px;
@@ -555,53 +576,61 @@ export default {
                     right: -46px;
                     background: -webkit-linear-gradient(top, rgb(12, 25, 69) 0%, #26bfbf 50%, rgb(12, 25, 69) 100%);
                 }
+
                 .label {
                     margin-top: 30px;
                     border-top: 1px solid;
                     border-bottom: 1px solid;
-                    border-image: -webkit-linear-gradient(
-                        left,
-                        rgb(12 25 69 / 0%) 10%,
-                        #0b5252 50%,
-                        rgb(12 25 69 / 0%) 90%
-                    );
+                    border-image: -webkit-linear-gradient(left,
+                            rgb(12 25 69 / 0%) 10%,
+                            #0b5252 50%,
+                            rgb(12 25 69 / 0%) 90%);
                     height: 32px;
                     line-height: 32px;
                     position: relative;
                 }
+
                 .value {
                     height: 110px;
                     background-repeat: no-repeat;
                     background-size: 100% 100%;
                     font-size: 28px;
                     line-height: 70px;
+
                     &.access {
                         background-image: url('./img/barrier.png');
                         filter: hue-rotate(314deg);
                     }
+
                     &.barrier {
                         background-image: url('./img/barrier.png');
                     }
                 }
             }
         }
+
         .con3 {
             flex-direction: column;
+
             .openStatic {
                 width: 100%;
                 height: 190px;
             }
+
             .errorStatic {
                 width: 100%;
                 height: calc(100% - 190px);
             }
         }
+
         .con4 {
             padding: 0;
         }
     }
+
     .type1 {
         background: -webkit-linear-gradient(left, rgb(12 25 69 / 0%) 0%, #0b5252 50%, rgb(12 25 69 / 0%) 100%);
+
         &::before {
             background: #0b5252;
             content: '';
@@ -613,6 +642,7 @@ export default {
             height: 1px;
             background: -webkit-linear-gradient(left, rgb(12, 25, 69) 0%, #26bfbf 50%, rgb(12, 25, 69) 100%);
         }
+
         &::after {
             background: #0b5252;
             content: '';
@@ -625,8 +655,10 @@ export default {
             background: -webkit-linear-gradient(left, rgb(12, 25, 69) 0%, #26bfbf 50%, rgb(12, 25, 69) 100%);
         }
     }
+
     .type2 {
         background: -webkit-linear-gradient(left, rgb(12 25 69 / 0%) 0%, #275ab873 50%, rgb(12 25 69 / 0%) 100%);
+
         &::before {
             content: '';
             width: 100%;
@@ -637,6 +669,7 @@ export default {
             height: 1px;
             background: -webkit-linear-gradient(left, rgb(12, 25, 69) 0%, #2794b8 50%, rgb(12, 25, 69) 100%);
         }
+
         &::after {
             content: '';
             width: 100%;

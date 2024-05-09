@@ -1,17 +1,8 @@
 <template>
   <!-- 镜头接入配置生成 -->
-  <el-dialog
-    :title="$t('deviceCamera.lensAccessConfigurationGeneration')"
-    :visible.sync="$parent.registerInfoVisible"
-    top="10vh"
-    width="1000px"
-    :close-on-click-modal="false"
-    class="registerInfoDialog detailDialog"
-    :modal="false"
-    :draggable="false"  
-    @closed="dialogClosed"
-    @open="dialogOpen"
-  >
+  <el-dialog :title="$t('deviceCamera.lensAccessConfigurationGeneration')" :visible.sync="$parent.registerInfoVisible"
+    top="10vh" width="1000px" :close-on-click-modal="false" class="registerInfoDialog detailDialog" :modal="false"
+    :draggable="false" @closed="dialogClosed" @open="dialogOpen">
     <el-form ref="form" :model="form" label-width="146px" label-position="left">
       <div class="form-flex">
         <div class="form-left">
@@ -33,10 +24,8 @@
           <el-form-item :label="$t('public.password') + '：'">
             <pwd-input v-model="form.regPwd" readonly />
           </el-form-item>
-          <el-form-item
-            :label="$t('deviceCamera.administrativeRegions') + '：'"
-            v-if="form.vendor == 'HUAWEI' || form.vendor == 'DAHUA'"
-          >
+          <el-form-item :label="$t('deviceCamera.administrativeRegions') + '：'"
+            v-if="form.vendor == 'HUAWEI' || form.vendor == 'DAHUA'">
             <el-input v-model="form.areaCode" readonly></el-input>
           </el-form-item>
         </div>
@@ -69,23 +58,14 @@
         </div>
       </div>
     </el-form>
-    <el-table
-      :data="channelList"
-      :max-height="482"
-      :row-class-name="$parent.tableRowClassName"
-      border
-    >
+    <el-table :data="channelList" :max-height="482" :row-class-name="$parent.tableRowClassName" border>
       <el-table-column type="index" width="50" />
       <el-table-column show-overflow-tooltip :label="$t('deviceCamera.channelId')" min-width="110">
         <template #default="{ row }">
           <span>{{ row.channelId }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        :label="$t('deviceCamera.channelName')"
-        min-width="110"
-      >
+      <el-table-column show-overflow-tooltip :label="$t('deviceCamera.channelName')" min-width="110">
         <template #default="{ row }">
           <span>{{ row.channelName }}</span>
         </template>
@@ -117,7 +97,6 @@ export default {
   methods: {
     dialogOpen() {
       this.$nextTick(() => {
-        
         this.form = this.$parent.registerInfoForm
         this.channelList = this.$parent.channelList
       })
@@ -137,6 +116,7 @@ export default {
     width: calc(100% - 20px) !important;
     margin: 10px;
   }
+
   .pwdType {
     line-height: 3;
     cursor: pointer;

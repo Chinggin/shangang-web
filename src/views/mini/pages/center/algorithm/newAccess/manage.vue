@@ -1,30 +1,14 @@
 <template>
   <!--  算法接入管理 -->
-  <div
-    v-if="isRouterAlive"
-    id="algorithm-access"
-    ref="algorithmAccess"
-    v-loading="pageloading"
-    :element-loading-text="$t('public.batchImporting')"
-    
-  >
+  <div v-if="isRouterAlive" id="algorithm-access" ref="algorithmAccess" v-loading="pageloading"
+    :element-loading-text="$t('public.batchImporting')">
     <el-row>
       <el-col :span="4" class="el-row4">
         <el-scrollbar style="border-radius: 6px">
           <div id="orgTree">
-            <el-tree
-              ref="treeList"
-              node-key="id"
-              :props="organizationTreeProps"
-              :load="loadNode"
-              lazy
-              v-loading="treeLoading"
-              :default-expanded-keys="idArr"
-              :empty-text="treeEmptyText"
-              highlight-current
-              :expand-on-click-node="false"
-              @node-click="handleNodeClick"
-            >
+            <el-tree ref="treeList" node-key="id" :props="organizationTreeProps" :load="loadNode" lazy
+              v-loading="treeLoading" :default-expanded-keys="idArr" :empty-text="treeEmptyText" highlight-current
+              :expand-on-click-node="false" @node-click="handleNodeClick">
               <template #default="{ node, data }">
                 <span class="custom-tree-node">
                   <i :class="iconSty(data)" class="aci iconCss"></i>
@@ -43,23 +27,11 @@
           </div>
           <!-- 查询和其他操作 -->
           <div class="filter-container" style="position: absolute; top: 0px; right: -8px">
-            <el-form
-              :inline="true"
-              class="demo-form-inline"
-              label-width="100px"
-              ref="form"
-              :model="queryParams"
-              label-position="left"
-              style="display: flex; flex-direction: row"
-            >
+            <el-form :inline="true" class="demo-form-inline" label-width="100px" ref="form" :model="queryParams"
+              label-position="left" style="display: flex; flex-direction: row">
               <el-form-item>
-                <el-input
-                  v-model="queryParams.accessName"
-                  auto-complete="off"
-                  :placeholder="$t('newAccess.inputSearchAccName')"
-                  clearable
-                  class="inputMiddle"
-                />
+                <el-input v-model="queryParams.accessName" auto-complete="off"
+                  :placeholder="$t('newAccess.inputSearchAccName')" clearable class="inputMiddle" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="handleFind" class="miniBtn">
@@ -69,27 +41,15 @@
             </el-form>
           </div>
         </div>
-        <div
-          style="height: 600px"
-          v-loading="loading"
-          :element-loading-text="$t('public.loading')"
-          
-        >
+        <div style="height: 600px" v-loading="loading" :element-loading-text="$t('public.loading')">
           <div v-if="!loading && !tableData.length" class="tableNOdata">
             <img src="@/assets/img/common/NOdata.png" alt />
             <p>{{ $t('public.noData') }}</p>
           </div>
 
           <!-- 表格 -->
-          <el-table
-            :max-height="tableHeight"
-            v-if="!loading && tableData.length"
-            :row-class-name="tableRowClassName"
-            ref="multipleTable"
-            :data="tableData"
-            @selection-change="handleSelectionChange"
-            border
-          >
+          <el-table :max-height="tableHeight" v-if="!loading && tableData.length" :row-class-name="tableRowClassName"
+            ref="multipleTable" :data="tableData" @selection-change="handleSelectionChange" border>
             <template #empty>
               <span>{{ dataText }}</span>
             </template>
@@ -116,11 +76,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('newAccess.manufacturer')"
-              width="160"
-              show-overflow-tooltip
-            >
+            <el-table-column :label="$t('newAccess.manufacturer')" width="160" show-overflow-tooltip>
               <template #default="{ row }">
                 <span>{{ row.vendor }}</span>
               </template>
@@ -154,37 +110,21 @@
                 <span class="cell-operate" @click="handleUpdate(row)" v-if="PermissionManage">
                   {{ $t('public.modify') }}
                 </span>
-                <span
-                  class="cell-operate danger"
-                  @click="handleDelete(row)"
-                  v-if="PermissionManage"
-                >
+                <span class="cell-operate danger" @click="handleDelete(row)" v-if="PermissionManage">
                   {{ $t('public.delete') }}
                 </span>
               </template>
             </el-table-column>
           </el-table>
 
-          <pagination
-            v-if="!loading && tableData.length"
-            :total="total"
-            v-model:pageNum="queryParams.pageInfo.pageNum"
-            v-model:limit="queryParams.pageInfo.pageSize"
-            @pagination="getList"
-          />
+          <pagination v-if="!loading && tableData.length" :total="total" v-model:pageNum="queryParams.pageInfo.pageNum"
+            v-model:limit="queryParams.pageInfo.pageSize" @pagination="getList" />
         </div>
       </el-col>
     </el-row>
 
-    <access-add-new
-      v-model:visible="formDialogVisible"
-      :title="title"
-      :operation="operation"
-    ></access-add-new>
-    <access-detail-new
-      v-model:visible="formDialogVisible_detail"
-      :title="title_detail"
-    ></access-detail-new>
+    <access-add-new v-model:visible="formDialogVisible" :title="title" :operation="operation"></access-add-new>
+    <access-detail-new v-model:visible="formDialogVisible_detail" :title="title_detail"></access-detail-new>
     <status-log></status-log>
   </div>
 </template>
@@ -845,9 +785,11 @@ export default {
     right: 0;
     top: 0;
   }
+
   .el-dropdown {
     font-size: 14px;
   }
+
   .inputMiddle {
     width: 240px;
   }

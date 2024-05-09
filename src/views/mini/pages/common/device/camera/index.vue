@@ -1,46 +1,22 @@
 <template>
   <!-- 镜头管理 -->
-  <div
-    class='base'
-    id="device_camera"
-    v-if="isRouterAlive"
-    ref="deviceCamera"
-    v-loading="pageloading"
-    :element-loading-text="$t('public.batchImporting')"
-    element-loading-background="rgba(0, 0, 0, 0.5)"
-  >
+  <div class='base' id="device_camera" v-if="isRouterAlive" ref="deviceCamera" v-loading="pageloading"
+    :element-loading-text="$t('public.batchImporting')" element-loading-background="rgba(0, 0, 0, 0.5)">
     <el-row>
       <el-col :span="4" class="el-row4">
         <el-scrollbar style="border-radius: 6px">
-          <lazy-search-tree
-            ref="lazyTree"
-            @initList="initData"
-            @nodeClick="treeNodeClick"
-            :placeholderTitle="placeholderTitle"
-            :withTenant="2"
-            :treeApi="treeApi"
-            :searchApi="searchApi"
-            :locateApi="locateApi"
-          />
+          <lazy-search-tree ref="lazyTree" @initList="initData" @nodeClick="treeNodeClick"
+            :placeholderTitle="placeholderTitle" :withTenant="2" :treeApi="treeApi" :searchApi="searchApi"
+            :locateApi="locateApi" />
         </el-scrollbar>
       </el-col>
 
       <el-col :span="20" class="el-row20">
         <div style="margin: 20px 0 20px">
-          <el-button
-            v-if="PermissionMove"
-            type="primary"
-            @click="handelChange"
-            :disabled="changeBtn"
-          >
+          <el-button v-if="PermissionMove" type="primary" @click="handelChange" :disabled="changeBtn">
             {{ $t('deviceCamera.EquipmentMobile') }}
           </el-button>
-          <el-button
-            v-if="PermissionPlanSet"
-            type="primary"
-            :disabled="changeBtn"
-            @click="Batchvideo"
-          >
+          <el-button v-if="PermissionPlanSet" type="primary" :disabled="changeBtn" @click="Batchvideo">
             {{ $t('deviceCamera.VideoStrategy') }}
           </el-button>
           <el-button v-if="PermissionInfo" type="primary" @click="exportExcelModalVisible = true">
@@ -48,266 +24,139 @@
           </el-button>
         </div>
         <div class="search-form searchSelect">
-          <el-form
-            :inline="true"
-            class="demo-form-inline"
-            :label-width="locale == 'en' ? '155px' : '130px'"
-            ref="form"
-            :model="searchForm"
-            label-position="left"
-          >
+          <el-form :inline="true" class="demo-form-inline" :label-width="locale == 'en' ? '155px' : '130px'" ref="form"
+            :model="searchForm" label-position="left">
             <div class="flexstart">
-              <el-form-item
-                :label="$t('deviceCamera.cameraName') + ' ：'"
-                prop="cameraName"
-                :class="screenFlag ? 'screenthree' : 'flex-item'"
-              >
-                <el-input
-                  v-model="searchForm.cameraName"
-                  auto-complete="off"
-                  :placeholder="$t('deviceCamera.pleaseInputCameraName')"
-                  clearable
-                  maxlength="128"
-                  @change="search_change"
-                />
+              <el-form-item :label="$t('deviceCamera.cameraName') + ' ：'" prop="cameraName"
+                :class="screenFlag ? 'screenthree' : 'flex-item'">
+                <el-input v-model="searchForm.cameraName" auto-complete="off"
+                  :placeholder="$t('deviceCamera.pleaseInputCameraName')" clearable maxlength="128"
+                  @change="search_change" />
               </el-form-item>
 
-              <el-form-item
-                :label="$t('deviceCamera.cameraId') + ' ：'"
-                prop="cameraId"
-                :class="screenFlag ? 'screenthree' : 'flex-item'"
-              >
-                <el-input
-                  v-model="searchForm.cameraId"
-                  auto-complete="off"
-                  :placeholder="$t('deviceCamera.pleaseInputcameraId')"
-                  clearable
-                  maxlength="32"
-                  @change="search_change"
-                />
+              <el-form-item :label="$t('deviceCamera.cameraId') + ' ：'" prop="cameraId"
+                :class="screenFlag ? 'screenthree' : 'flex-item'">
+                <el-input v-model="searchForm.cameraId" auto-complete="off"
+                  :placeholder="$t('deviceCamera.pleaseInputcameraId')" clearable maxlength="32"
+                  @change="search_change" />
               </el-form-item>
-              <el-form-item
-                :label="$t('deviceCamera.ptzType') + ' ：'"
-                prop="ptzType"
-                :class="screenFlag ? 'screenthree' : 'flex-item'"
-                v-if="screenFlag"
-              >
+              <el-form-item :label="$t('deviceCamera.ptzType') + ' ：'" prop="ptzType"
+                :class="screenFlag ? 'screenthree' : 'flex-item'" v-if="screenFlag">
                 <el-select v-model="searchForm.ptzType" @change="search_change">
                   <el-option :label="$t('public.all')" value></el-option>
-                  <el-option
-                    v-for="(item, index) in ptzTypeData"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                  <el-option v-for="(item, index) in ptzTypeData" :key="index" :label="item.name"
+                    :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
             </div>
             <div v-show="showManyCondition">
               <div class="flexstart">
-                <el-form-item
-                  :label="$t('deviceCamera.ptzType') + ' ：'"
-                  prop="ptzType"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                  v-if="!screenFlag"
-                >
+                <el-form-item :label="$t('deviceCamera.ptzType') + ' ：'" prop="ptzType"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'" v-if="!screenFlag">
                   <el-select v-model="searchForm.ptzType" @change="search_change">
                     <el-option :label="$t('public.all')" value></el-option>
-                    <el-option
-                      v-for="(item, index) in ptzTypeData"
-                      :key="index"
-                      :label="item.name"
-                      :value="item.value"
-                    ></el-option>
+                    <el-option v-for="(item, index) in ptzTypeData" :key="index" :label="item.name"
+                      :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
 
-                <el-form-item
-                  :label="$t('deviceCamera.puIp') + ' ：'"
-                  prop="puIp"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                >
-                  <el-input
-                    v-model="searchForm.puIp"
-                    auto-complete="off"
-                    :placeholder="$t('deviceCamera.inputPuIp')"
-                    clearable
-                  />
+                <el-form-item :label="$t('deviceCamera.puIp') + ' ：'" prop="puIp"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'">
+                  <el-input v-model="searchForm.puIp" auto-complete="off" :placeholder="$t('deviceCamera.inputPuIp')"
+                    clearable />
                 </el-form-item>
-                <el-form-item
-                  :label="$t('public.thirdCameraId') + ' ：'"
-                  prop="thirdCameraId"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                  v-if="screenFlag"
-                >
-                  <el-input
-                    v-model="searchForm.thirdCameraId"
-                    auto-complete="off"
-                    :placeholder="$t('deviceCamera.pleaseInputthirdCameraId')"
-                    clearable
-                    maxlength="64"
-                    @change="search_change"
-                  />
+                <el-form-item :label="$t('public.thirdCameraId') + ' ：'" prop="thirdCameraId"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'" v-if="screenFlag">
+                  <el-input v-model="searchForm.thirdCameraId" auto-complete="off"
+                    :placeholder="$t('deviceCamera.pleaseInputthirdCameraId')" clearable maxlength="64"
+                    @change="search_change" />
                 </el-form-item>
-                <el-form-item
-                  :label="$t('deviceCamera.platName') + ' ：'"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                  style="width: 36%"
-                  auto-complete="off"
-                  prop="platId"
-                  v-if="screenFlag"
-                >
+                <el-form-item :label="$t('deviceCamera.platName') + ' ：'"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'" style="width: 36%" auto-complete="off" prop="platId"
+                  v-if="screenFlag">
                   <el-select v-model="searchForm.platId" @change="search_change">
                     <el-option :label="$t('public.all')" value></el-option>
-                    <el-option
-                      v-for="(item, index) in platNameList"
-                      :key="index"
-                      :label="item.platName"
-                      :value="item.platId"
-                    ></el-option>
+                    <el-option v-for="(item, index) in platNameList" :key="index" :label="item.platName"
+                      :value="item.platId"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
               <div class="flexstart">
-                <el-form-item
-                  :label="$t('public.thirdCameraId') + ' ：'"
-                  prop="thirdCameraId"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                  v-if="!screenFlag"
-                >
-                  <el-input
-                    v-model="searchForm.thirdCameraId"
-                    auto-complete="off"
-                    :placeholder="$t('deviceCamera.pleaseInputthirdCameraId')"
-                    clearable
-                    maxlength="64"
-                    @change="search_change"
-                  />
+                <el-form-item :label="$t('public.thirdCameraId') + ' ：'" prop="thirdCameraId"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'" v-if="!screenFlag">
+                  <el-input v-model="searchForm.thirdCameraId" auto-complete="off"
+                    :placeholder="$t('deviceCamera.pleaseInputthirdCameraId')" clearable maxlength="64"
+                    @change="search_change" />
                 </el-form-item>
-                <el-form-item
-                  :label="$t('deviceCamera.platName') + ' ：'"
-                  style="width: 36%"
-                  auto-complete="off"
-                  prop="platId"
-                  v-if="!screenFlag"
-                >
-                  <el-select
-                    v-model="searchForm.platId"
-                    :placeholder="$t('deviceCamera.pleaseInputPlatId')"
-                    @change="search_change"
-                  >
+                <el-form-item :label="$t('deviceCamera.platName') + ' ：'" style="width: 36%" auto-complete="off"
+                  prop="platId" v-if="!screenFlag">
+                  <el-select v-model="searchForm.platId" :placeholder="$t('deviceCamera.pleaseInputPlatId')"
+                    @change="search_change">
                     <el-option :label="$t('public.all')" value></el-option>
-                    <el-option
-                      v-for="(item, index) in platNameList"
-                      :key="index"
-                      :label="item.platName"
-                      :value="item.platId"
-                    ></el-option>
+                    <el-option v-for="(item, index) in platNameList" :key="index" :label="item.platName"
+                      :value="item.platId"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
 
               <div class="flexstart">
-                <el-form-item
-                  :label="$t('deviceCamera.cameraStatus') + ' ：'"
-                  prop="status"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                >
+                <el-form-item :label="$t('deviceCamera.cameraStatus') + ' ：'" prop="status"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'">
                   <el-select v-model="searchForm.status" @change="search_change">
-                    <el-option
-                      v-for="(item, index) in statusList"
-                      :key="index"
-                      :label="item.statusname"
-                      :value="item.statustype"
-                    ></el-option>
+                    <el-option v-for="(item, index) in statusList" :key="index" :label="item.statusname"
+                      :value="item.statustype"></el-option>
                   </el-select>
                 </el-form-item>
 
-                <el-form-item
-                  :label="$t('public.manufacturer') + ' ：'"
-                  prop="manufacturer"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                >
-                  <el-select
-                    v-model="searchForm.manufacturer"
-                    :placeholder="$t('public.pleaseInputmanufacturer')"
-                    @change="search_change"
-                  >
+                <el-form-item :label="$t('public.manufacturer') + ' ：'" prop="manufacturer"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'">
+                  <el-select v-model="searchForm.manufacturer" :placeholder="$t('public.pleaseInputmanufacturer')"
+                    @change="search_change">
                     <el-option :label="$t('public.all')" value></el-option>
-                    <el-option
-                      v-for="(item, index) in manufacturerData"
-                      :key="index"
-                      :label="item.name"
-                      :value="item.value"
-                    ></el-option>
+                    <el-option v-for="(item, index) in manufacturerData" :key="index" :label="item.name"
+                      :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
 
-                <el-form-item
-                  :label="$t('public.longitude') + ' ：'"
-                  prop="longitude"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                  v-if="screenFlag"
-                >
+                <el-form-item :label="$t('public.longitude') + ' ：'" prop="longitude"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'" v-if="screenFlag">
                   <el-popover placement="bottom" width="175" trigger="click">
                     <div style="font-size: 12px">
                       <p>{{ $t('deviceCamera.longlatSearchPrompt1') }}</p>
                       <p>{{ $t('deviceCamera.longlatSearchPrompt3') }}</p>
                     </div>
                     <template #reference>
-                      <el-input
-                        v-model="searchForm.longitude"
-                        auto-complete="off"
-                        :placeholder="$t('public.pleaseInputlongitude')"
-                        clearable
-                        @change="search_change"
-                      />
+                      <el-input v-model="searchForm.longitude" auto-complete="off"
+                        :placeholder="$t('public.pleaseInputlongitude')" clearable @change="search_change" />
                     </template>
                   </el-popover>
                 </el-form-item>
               </div>
 
               <div class="flexstart">
-                <el-form-item
-                  :label="$t('public.longitude') + '：'"
-                  prop="longitude"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                  v-if="!screenFlag"
-                >
+                <el-form-item :label="$t('public.longitude') + '：'" prop="longitude"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'" v-if="!screenFlag">
                   <el-popover placement="bottom" width="175" trigger="click">
                     <div style="font-size: 12px">
                       <p>{{ $t('deviceCamera.longlatSearchPrompt1') }}</p>
                       <p>{{ $t('deviceCamera.longlatSearchPrompt3') }}</p>
                     </div>
                     <template #reference>
-                      <el-input
-                        v-model="searchForm.longitude"
-                        auto-complete="off"
-                        :placeholder="$t('public.pleaseInputlongitude')"
-                        clearable
-                        @change="search_change"
-                      />
+                      <el-input v-model="searchForm.longitude" auto-complete="off"
+                        :placeholder="$t('public.pleaseInputlongitude')" clearable @change="search_change" />
                     </template>
                   </el-popover>
                 </el-form-item>
-                <el-form-item
-                  :label="$t('public.latitude') + ' ：'"
-                  prop="latitude"
-                  :class="screenFlag ? 'screenthree' : 'flex-item'"
-                >
+                <el-form-item :label="$t('public.latitude') + ' ：'" prop="latitude"
+                  :class="screenFlag ? 'screenthree' : 'flex-item'">
                   <el-popover placement="bottom" width="175" trigger="click">
                     <div style="font-size: 12px">
                       <p>{{ $t('deviceCamera.longlatSearchPrompt2') }}</p>
                       <p>{{ $t('deviceCamera.longlatSearchPrompt3') }}</p>
                     </div>
                     <template #reference>
-                      <el-input
-                        v-model="searchForm.latitude"
-                        auto-complete="off"
-                        :placeholder="$t('public.pleaseInputlatitude')"
-                        clearable
-                        @change="search_change"
-                      />
+                      <el-input v-model="searchForm.latitude" auto-complete="off"
+                        :placeholder="$t('public.pleaseInputlatitude')" clearable @change="search_change" />
                     </template>
                   </el-popover>
                 </el-form-item>
@@ -332,89 +181,50 @@
             <p>{{ $t('public.noData') }}</p>
           </div>
           <!-- 表格 -->
-          <el-table
-            v-if="!loading && tableData.length"
-            :row-class-name="tableRowClassName"
-            :max-height="tableHeight"
-            ref="multipleTable"
-            :data="tableData"
-            @selection-change="handleSelectionChange"
-            @row-contextmenu="rowContextmenu"
-            border
-          >
+          <el-table v-if="!loading && tableData.length" :row-class-name="tableRowClassName" :max-height="tableHeight"
+            ref="multipleTable" :data="tableData" @selection-change="handleSelectionChange"
+            @row-contextmenu="rowContextmenu" border>
             <template #empty>
               <span>{{ dataText }}</span>
             </template>
             <el-table-column label width="50" type="selection" />
 
-            <el-table-column
-              :label="$t('deviceCamera.cameraId')"
-              min-width="110"
-              show-overflow-tooltip
-              prop="cameraId"
-            >
+            <el-table-column :label="$t('deviceCamera.cameraId')" min-width="110" show-overflow-tooltip prop="cameraId">
               <template #default="{ row }">
                 <span>{{ row.cameraId }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('deviceCamera.cameraName')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="cameraName"
-            >
+            <el-table-column :label="$t('deviceCamera.cameraName')" min-width="100" show-overflow-tooltip
+              prop="cameraName">
               <template #default="{ row }">
                 <span>{{ row.cameraName }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('public.state')"
-              min-width="70"
-              show-overflow-tooltip
-              prop="status"
-            >
+            <el-table-column :label="$t('public.state')" min-width="70" show-overflow-tooltip prop="status">
               <template #default="{ row }">
-                <span
-                  :class="
-                    row.status == '0'
-                      ? 'warning'
-                      : row.status == '1'
-                      ? 'success'
-                      : row.status == '2'
-                      ? 'danger'
-                      : ''
-                  "
-                >
+                <span :class="row.status == '0'
+    ? 'warning'
+    : row.status == '1'
+      ? 'success'
+      : row.status == '2'
+        ? 'danger'
+        : ''
+    ">
                   {{ setStatus(row.status) }}
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              :label="$t('public.isEnabled')"
-              min-width="80"
-              show-overflow-tooltip
-              prop="isEnabled"
-            >
+            <el-table-column :label="$t('public.isEnabled')" min-width="80" show-overflow-tooltip prop="isEnabled">
               <template #default="{ row }">
                 <span :class="row.isEnabled == '0' ? 'danger' : 'success'">
                   {{ setisEnabled(row.isEnabled) }}
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              :label="$t('deviceCamera.puIp')"
-              min-width="90"
-              show-overflow-tooltip
-              prop="puIp"
-            />
-            <el-table-column
-              :label="$t('iotPlatform.platName')"
-              min-width="90"
-              show-overflow-tooltip
-              prop="platName"
-            >
+            <el-table-column :label="$t('deviceCamera.puIp')" min-width="90" show-overflow-tooltip prop="puIp" />
+            <el-table-column :label="$t('iotPlatform.platName')" min-width="90" show-overflow-tooltip prop="platName">
               <template #default="{ row }">
                 <span>
                   {{ row.platName }}
@@ -422,12 +232,8 @@
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('public.thirdCameraId')"
-              min-width="90"
-              show-overflow-tooltip
-              prop="thirdCameraId"
-            >
+            <el-table-column :label="$t('public.thirdCameraId')" min-width="90" show-overflow-tooltip
+              prop="thirdCameraId">
               <template #default="{ row }">
                 <span>
                   {{ row.thirdCameraId }}
@@ -435,45 +241,27 @@
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('public.AffiliatedOrg')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="organizationName"
-            >
+            <el-table-column :label="$t('public.AffiliatedOrg')" min-width="100" show-overflow-tooltip
+              prop="organizationName">
               <template #default="{ row }">
                 <span>{{ row.organizationName }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('public.recordPolicy')"
-              min-width="90"
-              show-overflow-tooltip
-              prop="recordPolicyName"
-            >
+            <el-table-column :label="$t('public.recordPolicy')" min-width="90" show-overflow-tooltip
+              prop="recordPolicyName">
               <template #default="{ row }">
                 <span>{{ row.recordPolicyName }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('public.createTime')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="createTime"
-            >
+            <el-table-column :label="$t('public.createTime')" min-width="100" show-overflow-tooltip prop="createTime">
               <template #default="{ row }">
                 <span>{{ row.createTime }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column
-              :label="$t('public.updateTime')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="updateTime"
-            >
+            <el-table-column :label="$t('public.updateTime')" min-width="100" show-overflow-tooltip prop="updateTime">
               <template #default="{ row }">
                 <span>{{ row.updateTime }}</span>
               </template>
@@ -481,33 +269,19 @@
 
             <el-table-column :label="$t('public.operating')" min-width="160">
               <template #default="{ row }">
-                <el-button type='text'
-                  class="cell-operate"
-                  style="word-break: break-word"
-                  @click="cameraDetails(row)"
-                  v-if="PermissionInfo"
-                >
+                <el-button type='text' class="cell-operate" style="word-break: break-word" @click="cameraDetails(row)"
+                  v-if="PermissionInfo">
                   {{ $t('public.particulars') }}
                 </el-button>
-                <span
-                  style="margin-right: 7px; color: #10a9ff; cursor: pointer; word-break: break-word"
-                  @click="paramsConfig(row)"
-                >
+                <span style="margin-right: 7px; color: #10a9ff; cursor: pointer; word-break: break-word"
+                  @click="paramsConfig(row)">
                   {{ $t('deviceCamera.paramsConfig') }}
                 </span>
-                <el-dropdown
-                  trigger="click"
-                  @command="handleCommand"
-                  v-if="
-                    PermissionAccessTo &&
-                    (row.platType == PLATFORM_TYPE.IVS || row.platType == PLATFORM_TYPE.ADS) &&
-                    row.drive == DRIVE_TYPE.T28181
-                  "
-                >
-                  <span
-                    style="color: #10a9ff; cursor: pointer; font-size: 12px"
-                    @click="GetLine(row)"
-                  >
+                <el-dropdown trigger="click" @command="handleCommand" v-if="PermissionAccessTo &&
+    (row.platType == PLATFORM_TYPE.IVS || row.platType == PLATFORM_TYPE.ADS) &&
+    row.drive == DRIVE_TYPE.T28181
+    ">
+                  <span style="color: #10a9ff; cursor: pointer; font-size: 12px" @click="GetLine(row)">
                     {{ $t('public.moreActions') }}
                   </span>
                   <template #dropdown>
@@ -525,13 +299,8 @@
           </el-table>
 
           <!--分页-->
-          <pagination
-            v-if="!loading && tableData.length"
-            :total="totalNum"
-            v-model:pageNum="pageNum"
-            v-model:limit="pageSize"
-            @pagination="getListByPage"
-          ></pagination>
+          <pagination v-if="!loading && tableData.length" :total="totalNum" v-model:pageNum="pageNum"
+            v-model:limit="pageSize" @pagination="getListByPage"></pagination>
         </div>
       </el-col>
     </el-row>
@@ -540,39 +309,16 @@
     <!-- 批量导入失败 -->
     <import-fail-list></import-fail-list>
     <!-- 录像对话框 || 批量录像对话框 -->
-    <camera-record
-      class="camera-record"
-      @recordSubmit="recordSubmit"
-      @batchRecordSubmit="batchRecordSubmit"
-    ></camera-record>
+    <camera-record class="camera-record" @recordSubmit="recordSubmit"
+      @batchRecordSubmit="batchRecordSubmit"></camera-record>
     <!-- 批量录像失败列表 -->
-    <el-dialog
-      draggable
-      :title="$t('deviceCamera.batchRecordingFailedList')"
-      v-model="videoDialog"
-      :close-on-click-modal="false"
-      width="1000px"
-      class="fail-dialog"
-    >
-      <el-table
-        max-height="469"
-        :data="videofaList"
-        style="margin: 20px 0 30px"
-        :row-class-name="tableRowClassName"
-        border
-      >
-        <el-table-column
-          show-overflow-tooltip
-          :label="$t('deviceCamera.cameraId')"
-          prop="cameraId"
-          min-width="130"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          :label="$t('primaryDevice.resultDesc')"
-          min-width="70"
-          prop="resultDesc"
-        />
+    <el-dialog draggable :title="$t('deviceCamera.batchRecordingFailedList')" v-model="videoDialog"
+      :close-on-click-modal="false" width="1000px" class="fail-dialog">
+      <el-table max-height="469" :data="videofaList" style="margin: 20px 0 30px" :row-class-name="tableRowClassName"
+        border>
+        <el-table-column show-overflow-tooltip :label="$t('deviceCamera.cameraId')" prop="cameraId" min-width="130" />
+        <el-table-column show-overflow-tooltip :label="$t('primaryDevice.resultDesc')" min-width="70"
+          prop="resultDesc" />
       </el-table>
     </el-dialog>
     <!-- 详情对话框 -->
@@ -584,27 +330,13 @@
     <!-- 镜头接入配置生成弹框 -->
     <camera-register></camera-register>
 
-    <batch-operate
-      v-model:visible="batchDialogVisible"
-      :multipleSelection="
-        operate == $t('deviceCamera.importInfoGIS') ? batchList : multipleSelection
-      "
-      :what="$t('batchOperator.camera')"
-      whatId="cameraId"
-      whatName="cameraName"
-      :multipleSelectionMany="multipleSelectionMany"
-      :operate="operate"
-      :batchApi="batchApi"
-      @searchClear="search_clear"
-      @getList="getCameraList"
-    />
+    <batch-operate v-model:visible="batchDialogVisible" :multipleSelection="operate == $t('deviceCamera.importInfoGIS') ? batchList : multipleSelection
+    " :what="$t('batchOperator.camera')" whatId="cameraId" whatName="cameraName"
+      :multipleSelectionMany="multipleSelectionMany" :operate="operate" :batchApi="batchApi" @searchClear="search_clear"
+      @getList="getCameraList" />
 
-    <ExportExcelModal
-      :title="$t('deviceCamera.exportCameraInfo')"
-      v-model:visible="exportExcelModalVisible"
-      :loadOption="exportExcelLoadFunc"
-      :customErrorColumn="exportExcelErrorColumns"
-    ></ExportExcelModal>
+    <ExportExcelModal :title="$t('deviceCamera.exportCameraInfo')" v-model:visible="exportExcelModalVisible"
+      :loadOption="exportExcelLoadFunc" :customErrorColumn="exportExcelErrorColumns"></ExportExcelModal>
   </div>
 </template>
 
@@ -837,7 +569,7 @@ export default {
     this.applicationTypeData()
   },
   activated() {
-    
+
     this.pageResize()
   },
   methods: {
@@ -1868,8 +1600,8 @@ export default {
             isExDomain == undefined
               ? ''
               : isExDomain == 1
-              ? this.$t('dictConst.yes')
-              : this.$t('dictConst.no')
+                ? this.$t('dictConst.yes')
+                : this.$t('dictConst.no')
           streamType = this.selectDictLabel(this.streamTypeList, streamType, {
             key: 'name',
             value: 'value'
@@ -2055,7 +1787,7 @@ export default {
                 this.getCameraList()
               }
             })
-            .catch(() => {})
+            .catch(() => { })
         })
         .catch(() => {
           this.$message({
@@ -2080,6 +1812,7 @@ export default {
       width: 100%;
     }
   }
+
   .el-dialog__body .el-form-item--small.el-form-item {
     margin-bottom: 28px;
   }
@@ -2091,6 +1824,7 @@ export default {
   .onenetDialog .el-dialog__body {
     padding: 15px 140px 5px 140px;
   }
+
   .org_change .el-dialog__body {
     padding: 15px 125px 5px;
   }
@@ -2111,6 +1845,7 @@ export default {
 
   .upload {
     position: relative;
+
     .importInfoGIS {
       position: absolute;
       top: 0;
@@ -2122,6 +1857,7 @@ export default {
       height: 40px;
     }
   }
+
   #RecordPolicy {
     width: 80px;
     height: 29px;

@@ -1,103 +1,44 @@
 <template>
   <!-- 水印添加修改 -->
-  <el-dialog
-    :title="$t('systemTatermarkManage.detail')"
-    v-model="$parent.dialogTableFormVisible"
-    top="10vh"
-    width="1270px"
-    :close-on-click-modal="false"
-    class="dialog"
-    @closed="dialogClosed"
-    @open="dialogOpen"
-    :modal-append-to-body="true"
-    :modal="true"
-    draggable
-    id="system-watermark-tabale"
-    :show-close="!allLoading"
-  >
+  <el-dialog :title="$t('systemTatermarkManage.detail')" v-model="$parent.dialogTableFormVisible" top="10vh"
+    width="1270px" :close-on-click-modal="false" class="dialog" @closed="dialogClosed" @open="dialogOpen"
+    :modal-append-to-body="true" :modal="true" draggable id="system-watermark-tabale" :show-close="!allLoading">
     <div class="filter-container">
       <el-row>
-        <el-form
-          :inline="true"
-          class="demo-form-inline flex flex-wrap justify-between"
-          ref="searchForm"
-          :model="searchForm"
-          label-position="left"
-          :label-width="$parent.locale == 'en' ? '180px' : '84px'"
-          :style="{
-            position: 'relative',
-            height: showManyCondition ? 'initial' : '50px',
-            overflow: showManyCondition ? 'auto' : 'hidden'
-          }"
-        >
+        <el-form :inline="true" class="demo-form-inline flex flex-wrap justify-between" ref="searchForm"
+          :model="searchForm" label-position="left" :label-width="$parent.locale == 'en' ? '180px' : '84px'" :style="{
+    position: 'relative',
+    height: showManyCondition ? 'initial' : '50px',
+    overflow: showManyCondition ? 'auto' : 'hidden'
+  }">
           <el-form-item :label="$t('systemTatermarkManage.cameraId') + ' ：'" prop="cameraId">
-            <el-input
-              v-model="searchForm.cameraId"
-              auto-complete="off"
-              :placeholder="$t('systemTatermarkManage.pleaseInputcameraId')"
-              clearable
-              class="flexstart-table-input"
-            />
+            <el-input v-model="searchForm.cameraId" auto-complete="off"
+              :placeholder="$t('systemTatermarkManage.pleaseInputcameraId')" clearable class="flexstart-table-input" />
           </el-form-item>
-          <el-form-item
-            :label="$t('systemTatermarkManage.cameraName') + ' ：'"
-            prop="cameraName"
-          >
-            <el-input
-              v-model="searchForm.cameraName"
-              auto-complete="off"
-              :placeholder="$t('systemTatermarkManage.pleaseInputCameraName')"
-              clearable
-              class="flexstart-table-input"
-            />
+          <el-form-item :label="$t('systemTatermarkManage.cameraName') + ' ：'" prop="cameraName">
+            <el-input v-model="searchForm.cameraName" auto-complete="off"
+              :placeholder="$t('systemTatermarkManage.pleaseInputCameraName')" clearable
+              class="flexstart-table-input" />
           </el-form-item>
-          <el-form-item
-            :label="$t('deviceCamera.interconnectCode') + ' ：'"
-            prop="interconnectCode"
-          >
-            <el-input
-              v-model="searchForm.interconnectCode"
-              auto-complete="off"
-              :placeholder="$t('primaryDevice.pleaseInputinterconnectCode')"
-              clearable
-              class="flexstart-table-input"
-            />
+          <el-form-item :label="$t('deviceCamera.interconnectCode') + ' ：'" prop="interconnectCode">
+            <el-input v-model="searchForm.interconnectCode" auto-complete="off"
+              :placeholder="$t('primaryDevice.pleaseInputinterconnectCode')" clearable class="flexstart-table-input" />
           </el-form-item>
-          <el-form-item
-            :label="$t('systemTatermarkManage.platId') + ' ：'"
-            auto-complete="off"
-            prop="platId"
-          >
-            <el-select v-model="searchForm.platId"
-                       class="flexstart-table-input">
+          <el-form-item :label="$t('systemTatermarkManage.platId') + ' ：'" auto-complete="off" prop="platId">
+            <el-select v-model="searchForm.platId" class="flexstart-table-input">
               <el-option :label="$t('public.all')" value />
-              <el-option
-                v-for="(item, index) in $parent.platNameList"
-                :key="index"
-                :label="item.label"
-                :value="item.id"
-              />
+              <el-option v-for="(item, index) in $parent.platNameList" :key="index" :label="item.label"
+                :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item
-              :label="$t('systemTatermarkManage.cameraStatus') + ' ：'"
-              prop="cameraStatus"
-          >
-            <el-select v-model="searchForm.cameraStatus"
-                       class="flexstart-table-input">
+          <el-form-item :label="$t('systemTatermarkManage.cameraStatus') + ' ：'" prop="cameraStatus">
+            <el-select v-model="searchForm.cameraStatus" class="flexstart-table-input">
               <el-option :label="$t('public.all')" value />
-              <el-option
-                  v-for="(item, index) in cameraStatusOption"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.code"
-              />
+              <el-option v-for="(item, index) in cameraStatusOption" :key="index" :label="item.name"
+                :value="item.code" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            label=" "
-            :label-width="$parent.locale == 'en' ? '180px' : '84px'"
-          >
+          <el-form-item label=" " :label-width="$parent.locale == 'en' ? '180px' : '84px'">
             <div class="flexstart-table-input flex justify-end">
               <el-button type="primary" @click="handleQuery" class="miniBtn">
                 {{ $t('public.search') }}
@@ -114,84 +55,51 @@
         </el-form>
       </el-row>
       <no-table :tableLoading="loading" :tableData="tableData" style="height: 40vh">
-        <el-table
-            v-show="!loading && tableData.length"
-            ref="multipleTable"
-            :data="tableData"
-            max-height="calc(40vh - 50px)"
-            :row-class-name="tableRowClassName"
-            border
-        >
+        <el-table v-show="!loading && tableData.length" ref="multipleTable" :data="tableData"
+          max-height="calc(40vh - 50px)" :row-class-name="tableRowClassName" border>
           <template #empty>
             <span>{{ dataText }}</span>
           </template>
-          <el-table-column
-              :label="$t('systemTatermarkManage.cameraId')"
-              min-width="110"
-              show-overflow-tooltip
-              prop="cameraId"
-          >
+          <el-table-column :label="$t('systemTatermarkManage.cameraId')" min-width="110" show-overflow-tooltip
+            prop="cameraId">
             <template #default="{ row }">
               <span>{{ row.cameraId }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-              :label="$t('systemTatermarkManage.cameraName')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="cameraName"
-          >
+          <el-table-column :label="$t('systemTatermarkManage.cameraName')" min-width="100" show-overflow-tooltip
+            prop="cameraName">
             <template #default="{ row }">
               <span>{{ row.cameraName }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-              :label="$t('systemTatermarkManage.platId')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="platName"
-          >
+          <el-table-column :label="$t('systemTatermarkManage.platId')" min-width="100" show-overflow-tooltip
+            prop="platName">
             <template #default="{ row }">
               <span>{{ row.platName }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-              :label="$t('systemTatermarkManage.interconnectionCoding')"
-              min-width="100"
-              show-overflow-tooltip
-              prop="interconnectCode"
-          >
+          <el-table-column :label="$t('systemTatermarkManage.interconnectionCoding')" min-width="100"
+            show-overflow-tooltip prop="interconnectCode">
             <template #default="{ row }">
               <span>{{ row.interconnectCode }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-              :label="$t('systemTatermarkManage.cameraStatus')"
-              min-width="70"
-              show-overflow-tooltip
-              prop="cameraStatus"
-          >
+          <el-table-column :label="$t('systemTatermarkManage.cameraStatus')" min-width="70" show-overflow-tooltip
+            prop="cameraStatus">
             <template #default="{ row }">
-              <span
-                :class="{
-                  warning: row.cameraStatus == '0',
-                  success: row.cameraStatus == '1',
-                  danger: row.cameraStatus == '2'
-                }"
-              >
+              <span :class="{
+    warning: row.cameraStatus == '0',
+    success: row.cameraStatus == '1',
+    danger: row.cameraStatus == '2'
+  }">
                 {{ setStatus(row.cameraStatus) }}
               </span>
             </template>
           </el-table-column>
         </el-table>
         <!--分页-->
-        <pagination
-            v-show="!loading && tableData.length"
-            :total="totalNum"
-            v-model:pageNum="pageNum"
-            v-model:limit="pageSize"
-            @pagination="getListByPage"
-        />
+        <pagination v-show="!loading && tableData.length" :total="totalNum" v-model:pageNum="pageNum"
+          v-model:limit="pageSize" @pagination="getListByPage" />
       </no-table>
     </div>
     <template #footer>
@@ -295,7 +203,7 @@ export default {
     }
   },
   watch: {},
-  async mounted() {},
+  async mounted() { },
   computed: {
     ...mapState({
       cameraStatusOption: state => state.dict['device_status'] // 镜头状态
@@ -388,6 +296,7 @@ export default {
   .el-dialog__body {
     padding: 40px;
   }
+
   .flexstart-table-input {
     width: 200px !important;
   }

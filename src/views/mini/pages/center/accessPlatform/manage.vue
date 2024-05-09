@@ -4,19 +4,9 @@
       <el-col :span="4" class="el-row4">
         <el-scrollbar style="border-radius: 6px">
           <div id="orgTree">
-            <el-tree
-              ref="treeList"
-              node-key="id"
-              :props="organizationTreeProps"
-              :load="loadNode"
-              lazy
-              v-loading="treeLoading"
-              :default-expanded-keys="idArr"
-              :empty-text="treeEmptyText"
-              highlight-current
-              :expand-on-click-node="false"
-              @node-click="handleNodeClick"
-            >
+            <el-tree ref="treeList" node-key="id" :props="organizationTreeProps" :load="loadNode" lazy
+              v-loading="treeLoading" :default-expanded-keys="idArr" :empty-text="treeEmptyText" highlight-current
+              :expand-on-click-node="false" @node-click="handleNodeClick">
               <template #default="{ node, data }">
                 <span class="custom-tree-node">
                   <i :class="iconSty(data)" class="aci iconCss"></i>
@@ -34,21 +24,12 @@
         </div>
 
         <div class="search-form">
-          <el-form
-            :inline="true"
-            class="demo-form-inline"
-            :label-width="locale == 'en' ? '125px' : '84px'"
-            ref="form"
-            :model="queryParams"
-            label-position="left"
-          >
+          <el-form :inline="true" class="demo-form-inline" :label-width="locale == 'en' ? '125px' : '84px'" ref="form"
+            :model="queryParams" label-position="left">
             <div class="flexstart">
               <el-form-item :label="$t('public.platName') + ':'">
-                <el-input
-                  v-model="queryParams.platformName"
-                  clearable
-                  :placeholder="$t('public.pleaseInputplatName')"
-                />
+                <el-input v-model="queryParams.platformName" clearable
+                  :placeholder="$t('public.pleaseInputplatName')" />
               </el-form-item>
             </div>
             <div class="search-btn">
@@ -62,78 +43,44 @@
         <!-- //面包屑 -->
         <breadcrumb ref="breadcrumb" @changeTree="tree_change" />
 
-        <div
-          style="height: 600px"
-          v-loading="loading"
-          :element-loading-text="$t('public.loading')"
-        >
+        <div style="height: 600px" v-loading="loading" :element-loading-text="$t('public.loading')">
           <div v-if="!loading && !tableData.length" class="tableNOdata">
             <img src="@/assets/img/common/NOdata.png" alt />
             <p>{{ $t('public.noData') }}</p>
           </div>
 
           <!-- 表格 -->
-          <el-table
-            :max-height="tableHeight"
-            v-if="!loading && tableData.length"
-            :row-class-name="tableRowClassName"
-            ref="multipleTable"
-            :data="tableData"
-            @selection-change="handleSelectionChange"
-            border
-            style="width: 100%"
-          >
+          <el-table :max-height="tableHeight" v-if="!loading && tableData.length" :row-class-name="tableRowClassName"
+            ref="multipleTable" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
             <template #empty>
               <span>{{ dataText }}</span>
             </template>
             <el-table-column label width="50" type="selection" />
-            <el-table-column
-              :label="$t('accessPlatform.accessPlatformNumber')"
-              prop="platformId"
-              show-overflow-tooltip
-              width="180"
-            />
-            <el-table-column
-              :label="$t('accessPlatform.accessPlatformName')"
-              prop="platformName"
-              show-overflow-tooltip
-              width="160"
-            />
-            <el-table-column
-              :label="$t('accessPlatform.accessPlatformType')"
-              show-overflow-tooltip
-              :width="locale == 'en' ? 160 : 100"
-            >
+            <el-table-column :label="$t('accessPlatform.accessPlatformNumber')" prop="platformId" show-overflow-tooltip
+              width="180" />
+            <el-table-column :label="$t('accessPlatform.accessPlatformName')" prop="platformName" show-overflow-tooltip
+              width="160" />
+            <el-table-column :label="$t('accessPlatform.accessPlatformType')" show-overflow-tooltip
+              :width="locale == 'en' ? 160 : 100">
               <template #default="{ row }">
                 <span>{{ setPlatformTypeTable(row.platformType) }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              :label="$t('accessPlatform.accessPlatformStatus')"
-              prop="platformStatus"
-              show-overflow-tooltip
-              :width="locale == 'en' ? 180 : 100"
-            >
+            <el-table-column :label="$t('accessPlatform.accessPlatformStatus')" prop="platformStatus"
+              show-overflow-tooltip :width="locale == 'en' ? 180 : 100">
               <template #default="{ row }">
                 <span :class="setStatusClass(row.platformStatus)">
                   {{ setStatus(row.platformStatus) }}
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              :label="$t('alarmTypeManage.whetherToEnable')"
-              show-overflow-tooltip
-              :width="locale == 'en' ? 180 : 100"
-            >
+            <el-table-column :label="$t('alarmTypeManage.whetherToEnable')" show-overflow-tooltip
+              :width="locale == 'en' ? 180 : 100">
               <template #default="{ row }">
                 <span>{{ setEnable(row.enableStatus) }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              :label="$t('accessPlatform.platformAddress')"
-              show-overflow-tooltip
-              width="180"
-            >
+            <el-table-column :label="$t('accessPlatform.platformAddress')" show-overflow-tooltip width="180">
               <template #default="{ row }">
                 <span v-if="row.platformNetworkIp">
                   {{ row.platformNetworkIp }}({{ $t('accessPlatform.publicNetwork1') }})
@@ -143,29 +90,14 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              :label="$t('accessPlatform.organization')"
-              prop="organizationName"
-              show-overflow-tooltip
-              :width="locale == 'en' ? 150 : 100"
-            />
-            <el-table-column
-              :label="$t('public.createTime')"
-              prop="createTime"
-              show-overflow-tooltip
-              :min-width="locale == 'en' ? 120 : 90"
-            />
-            <el-table-column
-              :label="$t('accessPlatform.lastEditTime')"
-              prop="updateTime"
-              show-overflow-tooltip
-              :min-width="locale == 'en' ? 120 : 90"
-            />
+            <el-table-column :label="$t('accessPlatform.organization')" prop="organizationName" show-overflow-tooltip
+              :width="locale == 'en' ? 150 : 100" />
+            <el-table-column :label="$t('public.createTime')" prop="createTime" show-overflow-tooltip
+              :min-width="locale == 'en' ? 120 : 90" />
+            <el-table-column :label="$t('accessPlatform.lastEditTime')" prop="updateTime" show-overflow-tooltip
+              :min-width="locale == 'en' ? 120 : 90" />
 
-            <el-table-column
-              :label="$t('public.operating')"
-              :min-width="locale == 'en' ? 170 : 100"
-            >
+            <el-table-column :label="$t('public.operating')" :min-width="locale == 'en' ? 170 : 100">
               <template #default="{ row }">
                 <el-button type=text class="cell-operate" @click="handleView(row)">
                   {{ $t('public.particulars') }}
@@ -179,13 +111,13 @@
                   </span>
                   <template #dropdown>
                     <el-dropdown-menu>
-<!--                      <el-dropdown-item :command="beforeHandleCommand(row, 'sta')">-->
-<!--                        <span style="color: #10a9ff">{{ $t('accessPlatform.changeRecord') }}</span>-->
-<!--                      </el-dropdown-item>-->
+                      <!--                      <el-dropdown-item :command="beforeHandleCommand(row, 'sta')">-->
+                      <!--                        <span style="color: #10a9ff">{{ $t('accessPlatform.changeRecord') }}</span>-->
+                      <!--                      </el-dropdown-item>-->
                       <el-dropdown-item :command="beforeHandleCommand(row, 'ena')">
-                      <span :style="row.enableStatus == '0' ? 'color:#10a9ff;' : 'color:#ff6b6b;'">
-                        {{ row.enableStatus == 0 ? $t('public.enable') : $t('public.deactivate') }}
-                      </span>
+                        <span :style="row.enableStatus == '0' ? 'color:#10a9ff;' : 'color:#ff6b6b;'">
+                          {{ row.enableStatus == 0 ? $t('public.enable') : $t('public.deactivate') }}
+                        </span>
                       </el-dropdown-item>
                       <el-dropdown-item :command="beforeHandleCommand(row, 'del')">
                         <span style="color: #ff6b6b">{{ $t('public.delete') }}</span>
@@ -197,13 +129,9 @@
             </el-table-column>
           </el-table>
 
-          <pagination
-            v-show="!loading && tableData.length"
-            :total="total"
-            v-model:pageNum="queryParams.pageInfo.pageNum"
-            v-model:limit="queryParams.pageInfo.pageSize"
-            @pagination="getList"
-          />
+          <pagination v-show="!loading && tableData.length" :total="total"
+            v-model:pageNum="queryParams.pageInfo.pageNum" v-model:limit="queryParams.pageInfo.pageSize"
+            @pagination="getList" />
         </div>
       </el-col>
     </el-row>
@@ -393,6 +321,7 @@ export default {
       let resD = await this.$api.getDictionary({ type: 'access-plat-type' })
       let res = await this.$api.getAccessType({ selectTypeCode: '1' })
 
+      console.log(res)
       if (res.resultCode != 0) return
       this.accessPlatTypeList = res.accessTypeList
 

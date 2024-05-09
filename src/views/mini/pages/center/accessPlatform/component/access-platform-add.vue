@@ -1,84 +1,40 @@
 <template>
   <div id="accessPlatformAddDialog">
-    <el-dialog
-      :title="
-        $parent.operation
-          ? $t('accessPlatform.addAccessPlatform')
-          : $t('accessPlatform.accessPLatformModification')
-      "
-      :visible.sync="$parent.dialogFormVisible"
-      top="10vh"
-      :width="locale == 'en' ? '1400px' : '1000px'"
-      :close-on-click-modal="false"
-      @open="dialogOpen"
-      :draggable="false"
-    >
-      <el-form
-        ref="form"
-        :model="form"
-        :rules="formRules()"
-        class="archivesForm"
-        :label-width="locale == 'en' ? '190px' : '142px'"
-        label-position="left"
-        :validate-on-rule-change="false"
-      >
+    <el-dialog :title="$parent.operation
+      ? $t('accessPlatform.addAccessPlatform')
+      : $t('accessPlatform.accessPLatformModification')
+      " :visible.sync="$parent.dialogFormVisible" top="10vh" :width="locale == 'en' ? '1400px' : '1000px'"
+      :close-on-click-modal="false" @open="dialogOpen" :draggable="false">
+      <el-form ref="form" :model="form" :rules="formRules()" class="archivesForm"
+        :label-width="locale == 'en' ? '190px' : '142px'" label-position="left" :validate-on-rule-change="false">
         <!-- 基本信息 -->
         <collapse-card :title="$t('accessPlatform.essentialInformation')" v-model:collapse="show1">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.organization') + '：'"
-                prop="organizationName"
-              >
-                <el-input
-                  v-model="form.organizationName"
-                  :placeholder="$t('accessPlatform.selectYourOrganization')"
-                  disabled
-                />
+              <el-form-item :label="$t('accessPlatform.organization') + '：'" prop="organizationName">
+                <el-input v-model="form.organizationName" :placeholder="$t('accessPlatform.selectYourOrganization')"
+                  disabled />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.accessPlatformType') + '：'"
-                prop="platformType"
-              >
-                <el-input
-                  v-model="$parent.platformTypeHolder"
-                  disabled
-                  v-show="!$parent.operation"
-                />
+              <el-form-item :label="$t('accessPlatform.accessPlatformType') + '：'" prop="platformType">
+                <el-input v-model="$parent.platformTypeHolder" disabled v-show="!$parent.operation" />
 
-                <el-cascader
-                  v-if="$parent.operation"
-                  :options="$parent.options"
-                  :props="{ expandTrigger: 'hover' }"
-                  clearable
-                  :show-all-levels="false"
-                  v-model="form.platformType"
-                  :popper-append-to-body="false"
-                  @change="changePlatType"
-                ></el-cascader>
+                <el-cascader v-if="$parent.operation" :options="$parent.options" :props="{ expandTrigger: 'hover' }"
+                  clearable :show-all-levels="false" v-model="form.platformType" :popper-append-to-body="false"
+                  @change="changePlatType"></el-cascader>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.accessPlatformName') + '：'"
-                prop="platformName"
-              >
-                <el-input
-                  v-model="form.platformName"
-                  :placeholder="$t('accessPlatform.inputAccessplatformName')"
-                />
+              <el-form-item :label="$t('accessPlatform.accessPlatformName') + '：'" prop="platformName">
+                <el-input v-model="form.platformName" :placeholder="$t('accessPlatform.inputAccessplatformName')" />
               </el-form-item>
             </el-col>
             <el-col :span="12" class="platformScaleCol">
               <el-form-item :label="$t('accessPlatform.platformScale') + '：'" prop="platformScale">
-                <el-input
-                  v-model="form.platformScale"
-                  :placeholder="$t('accessPlatform.accessPlatformScale')"
-                />
+                <el-input v-model="form.platformScale" :placeholder="$t('accessPlatform.accessPlatformScale')" />
                 <div style="display: inline; padding-left: 5px">
                   {{ $t('accessPlatform.road') }}
                 </div>
@@ -88,48 +44,24 @@
 
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                class="long-error"
-                :label="$t('accessPlatform.gatewaySlection') + '：'"
-                prop="gatewayGroup"
-              >
-                <el-input
-                  ref="focuswayInput"
-                  v-model="form.gatewayGroup"
-                  @focus="foucsGateWay"
+              <el-form-item class="long-error" :label="$t('accessPlatform.gatewaySlection') + '：'" prop="gatewayGroup">
+                <el-input ref="focuswayInput" v-model="form.gatewayGroup" @focus="foucsGateWay"
                   :placeholder="$t('accessPlatform.clickSelect')"
-                  :disabled="!$parent.operation && $parent.choosedEnableStatus == 1"
-                />
+                  :disabled="!$parent.operation && $parent.choosedEnableStatus == 1" />
               </el-form-item>
             </el-col>
             <el-col v-if="currentPlatType === PLATFORM_TYPE.ADS" :span="12">
-              <el-form-item
-                class="long-error"
-                :label="$t('accessPlatform.domainCode') + '：'"
-                prop="regionCode"
-              >
-                <el-input
-                  v-model="form.regionCode"
-                  :placeholder="$t('accessPlatform.inputDomainCode')"
-                  clearable
-                />
+              <el-form-item class="long-error" :label="$t('accessPlatform.domainCode') + '：'" prop="regionCode">
+                <el-input v-model="form.regionCode" :placeholder="$t('accessPlatform.inputDomainCode')" clearable />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item
-                :label="$t('accessPlatform.remarkInformation') + '：'"
-                class="single-line"
-                prop="remark"
-              >
-                <el-input
-                  v-model="form.remark"
-                  type="textarea"
-                  maxlength="1024"
-                  :placeholder="$t('accessPlatform.fillInTheRemarks')"
-                />
+              <el-form-item :label="$t('accessPlatform.remarkInformation') + '：'" class="single-line" prop="remark">
+                <el-input v-model="form.remark" type="textarea" maxlength="1024"
+                  :placeholder="$t('accessPlatform.fillInTheRemarks')" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -139,238 +71,132 @@
         <collapse-card :title="$t('accessPlatform.dockinginformation')" v-model:collapse="show2">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.networkType') + '：'"
-                prop="platformProtocolInfo.accessNetworkType"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-select
-                  v-model="form.platformProtocolInfo.accessNetworkType"
-                  clearable
-                  :placeholder="$t('accessPlatform.selectTheDockingNEtworkType')"
-                >
-                  <el-option
-                    v-for="item in $parent.accessNetworkTypeList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  />
+              <el-form-item :label="$t('accessPlatform.networkType') + '：'"
+                prop="platformProtocolInfo.accessNetworkType" :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-select v-model="form.platformProtocolInfo.accessNetworkType" clearable
+                  :placeholder="$t('accessPlatform.selectTheDockingNEtworkType')">
+                  <el-option v-for="item in $parent.accessNetworkTypeList" :key="item.value" :label="item.name"
+                    :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                v-if="
-                  currentPlatType !== PLATFORM_TYPE.ADS && currentPlatType !== PLATFORM_TYPE.VPAAS
-                "
-                :label="$t('accessPlatform.authenticationMode') + '：'"
-                prop="platformProtocolInfo.accessAuthType"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-select
-                  v-model="form.platformProtocolInfo.accessAuthType"
-                  clearable
-                  :placeholder="$t('accessPlatform.selectAuthenticationMode')"
-                  @focus="focusAuthType"
-                >
-                  <el-option
-                    v-for="item in $parent.accessAuthTypeListFilter"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  />
+              <el-form-item v-if="currentPlatType !== PLATFORM_TYPE.ADS && currentPlatType !== PLATFORM_TYPE.VPAAS
+      " :label="$t('accessPlatform.authenticationMode') + '：'" prop="platformProtocolInfo.accessAuthType"
+                :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-select v-model="form.platformProtocolInfo.accessAuthType" clearable
+                  :placeholder="$t('accessPlatform.selectAuthenticationMode')" @focus="focusAuthType">
+                  <el-option v-for="item in $parent.accessAuthTypeListFilter" :key="item.value" :label="item.name"
+                    :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                v-if="
-                  currentPlatType !== PLATFORM_TYPE.ADS && currentPlatType !== PLATFORM_TYPE.VPAAS
-                "
-                :label="$t('accessPlatform.protocolVersion') + '：'"
-                prop="platformProtocolInfo.accessProtocolVersion"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessProtocolVersion"
-                  :placeholder="$t('accessPlatform.inputProtocolVersion')"
-                />
+              <el-form-item v-if="currentPlatType !== PLATFORM_TYPE.ADS && currentPlatType !== PLATFORM_TYPE.VPAAS
+      " :label="$t('accessPlatform.protocolVersion') + '：'" prop="platformProtocolInfo.accessProtocolVersion"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessProtocolVersion"
+                  :placeholder="$t('accessPlatform.inputProtocolVersion')" />
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row
-            :gutter="20"
-            v-if="
-              form.platformProtocolInfo.accessNetworkType == 1 &&
-              currentPlatType !== PLATFORM_TYPE.AVS
-            "
-          >
+          <el-row :gutter="20" v-if="form.platformProtocolInfo.accessNetworkType == 1 &&
+      currentPlatType !== PLATFORM_TYPE.AVS
+      ">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.platformPublicNetworkIP') + '：'"
-                prop="platformNetworkIp"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformNetworkIp"
-                  :placeholder="$t('accessPlatform.inputPlatformPublicNetworkIP')"
-                />
+              <el-form-item :label="$t('accessPlatform.platformPublicNetworkIP') + '：'" prop="platformNetworkIp"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformNetworkIp"
+                  :placeholder="$t('accessPlatform.inputPlatformPublicNetworkIP')" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.publicNetworkPort') + '：'"
-                prop="platformNetworkPort"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformNetworkPort"
-                  :placeholder="$t('accessPlatform.inputPublicNetworkPort')"
-                />
+              <el-form-item :label="$t('accessPlatform.publicNetworkPort') + '：'" prop="platformNetworkPort"
+                :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input v-model="form.platformNetworkPort"
+                  :placeholder="$t('accessPlatform.inputPublicNetworkPort')" />
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row
-            :gutter="20"
-            v-if="
-              form.platformProtocolInfo.accessNetworkType == 2 &&
-              currentPlatType !== PLATFORM_TYPE.AVS
-            "
-          >
+          <el-row :gutter="20" v-if="form.platformProtocolInfo.accessNetworkType == 2 &&
+      currentPlatType !== PLATFORM_TYPE.AVS
+      ">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.privateNetworkIP') + '：'"
-                prop="platformIntranetIp"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformIntranetIp"
-                  :placeholder="$t('accessPlatform.InputPrivateNetworkIP')"
-                />
+              <el-form-item :label="$t('accessPlatform.privateNetworkIP') + '：'" prop="platformIntranetIp"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformIntranetIp" :placeholder="$t('accessPlatform.InputPrivateNetworkIP')" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.privateNetworkPort') + '：'"
-                prop="platformIntranetPort"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformIntranetPort"
-                  :placeholder="$t('accessPlatform.InputPrivateNetworkPort')"
-                />
+              <el-form-item :label="$t('accessPlatform.privateNetworkPort') + '：'" prop="platformIntranetPort"
+                :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input v-model="form.platformIntranetPort"
+                  :placeholder="$t('accessPlatform.InputPrivateNetworkPort')" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" v-if="form.platformProtocolInfo.accessAuthType == 1">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.dockingAccount') + '：'"
-                prop="platformProtocolInfo.accessAccount"
-                key="accessAccount"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessAccount"
-                  :placeholder="$t('accessPlatform.InputDockingAccount')"
-                />
+              <el-form-item :label="$t('accessPlatform.dockingAccount') + '：'" prop="platformProtocolInfo.accessAccount"
+                key="accessAccount" :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessAccount"
+                  :placeholder="$t('accessPlatform.InputDockingAccount')" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.dockingPassword') + '：'"
-                prop="platformProtocolInfo.accessPassword"
-                key="accessPassword"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  type="password"
-                  v-model="form.platformProtocolInfo.accessPassword"
-                  :placeholder="$t('accessPlatform.inputDockingPassword')"
-                />
+              <el-form-item :label="$t('accessPlatform.dockingPassword') + '：'"
+                prop="platformProtocolInfo.accessPassword" key="accessPassword"
+                :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input type="password" v-model="form.platformProtocolInfo.accessPassword"
+                  :placeholder="$t('accessPlatform.inputDockingPassword')" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" v-if="form.platformProtocolInfo.accessAuthType == 2">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.dockingAK') + '：'"
-                prop="platformProtocolInfo.accessKey"
-                key="accessKey"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessKey"
-                  :placeholder="$t('accessPlatform.inputDockingAK')"
-                />
+              <el-form-item :label="$t('accessPlatform.dockingAK') + '：'" prop="platformProtocolInfo.accessKey"
+                key="accessKey" :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessKey"
+                  :placeholder="$t('accessPlatform.inputDockingAK')" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.dockingSk') + '：'"
-                prop="platformProtocolInfo.accessSecret"
-                key="accessSecret"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessSecret"
-                  :placeholder="$t('accessPlatform.inputDockingSk')"
-                />
+              <el-form-item :label="$t('accessPlatform.dockingSk') + '：'" prop="platformProtocolInfo.accessSecret"
+                key="accessSecret" :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessSecret"
+                  :placeholder="$t('accessPlatform.inputDockingSk')" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" v-if="form.platformProtocolInfo.accessAuthType == 2">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.userNumber') + '：'"
-                prop="platformProtocolInfo.accessUserId"
-                key="accessUserId"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessUserId"
-                  :placeholder="$t('accessPlatform.dockingUserNumber')"
-                />
+              <el-form-item :label="$t('accessPlatform.userNumber') + '：'" prop="platformProtocolInfo.accessUserId"
+                key="accessUserId" :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessUserId"
+                  :placeholder="$t('accessPlatform.dockingUserNumber')" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" v-if="form.platformProtocolInfo.accessAuthType == 3">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.dockingToken') + '：'"
-                prop="platformProtocolInfo.accessToken"
-                key="accessToken"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessToken"
-                  :placeholder="$t('accessPlatform.inputDockingToken')"
-                />
+              <el-form-item :label="$t('accessPlatform.dockingToken') + '：'" prop="platformProtocolInfo.accessToken"
+                key="accessToken" :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessToken"
+                  :placeholder="$t('accessPlatform.inputDockingToken')" />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20" v-if="form.platformProtocolInfo.accessProtocolType == 3">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('deviceCamera.platId') + '：'"
-                prop="platformLevelType"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-select
-                  v-model="form.platformLevelType"
-                  clearable
-                  :placeholder="$t('deviceCamera.pleaseInputPlatId')"
-                  :disabled="!$parent.operation"
-                >
-                  <el-option
-                    v-for="item in $parent.platTypeList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  />
+              <el-form-item :label="$t('deviceCamera.platId') + '：'" prop="platformLevelType"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-select v-model="form.platformLevelType" clearable
+                  :placeholder="$t('deviceCamera.pleaseInputPlatId')" :disabled="!$parent.operation">
+                  <el-option v-for="item in $parent.platTypeList" :key="item.value" :label="item.name"
+                    :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -378,177 +204,105 @@
 
           <el-row :gutter="20" v-if="form.platformProtocolInfo.accessProtocolType == 3">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.platformNo') + '：'"
-                prop="platformProtocolInfo.platformGbId"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.platformGbId"
-                  :placeholder="$t('accessPlatform.inputPlatformNo')"
-                  key="platformGbId"
-                  :disabled="!$parent.operation"
-                />
+              <el-form-item :label="$t('accessPlatform.platformNo') + '：'" prop="platformProtocolInfo.platformGbId"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.platformGbId"
+                  :placeholder="$t('accessPlatform.inputPlatformNo')" key="platformGbId"
+                  :disabled="!$parent.operation" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.numberOfThisLevel') + '：'"
-                prop="platformProtocolInfo.accessGbId"
-                key="accessGbId"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformProtocolInfo.accessGbId"
-                  :placeholder="$t('accessPlatform.inputNumberOfThisLevel')"
-                  :disabled="!$parent.operation"
-                />
+              <el-form-item :label="$t('accessPlatform.numberOfThisLevel') + '：'" prop="platformProtocolInfo.accessGbId"
+                key="accessGbId" :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input v-model="form.platformProtocolInfo.accessGbId"
+                  :placeholder="$t('accessPlatform.inputNumberOfThisLevel')" :disabled="!$parent.operation" />
               </el-form-item>
             </el-col>
           </el-row>
         </collapse-card>
 
         <!-- 媒体播放配置 -->
-        <collapse-card
-          :title="$t('accessPlatform.playbackConfiguration')"
-          v-model:collapse="show3"
-          v-if="ifShowMedia"
-        >
+        <collapse-card :title="$t('accessPlatform.playbackConfiguration')" v-model:collapse="show3" v-if="ifShowMedia">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.mediaDocking') + '：'"
-                prop="platformMediaInfo.mediaAccessType"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-select
-                  v-model="form.platformMediaInfo.mediaAccessType"
-                  clearable
-                  :placeholder="$t('accessPlatform.inputMediaDocking')"
-                >
-                  <el-option
-                    v-for="item in $parent.mediaAccessTypeListFilter"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  />
+              <el-form-item :label="$t('accessPlatform.mediaDocking') + '：'" prop="platformMediaInfo.mediaAccessType"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-select v-model="form.platformMediaInfo.mediaAccessType" clearable
+                  :placeholder="$t('accessPlatform.inputMediaDocking')">
+                  <el-option v-for="item in $parent.mediaAccessTypeListFilter" :key="item.value" :label="item.name"
+                    :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" v-if="ifShowMediaItem">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.accessPublicIP') + '：'"
-                prop="platformMediaInfo.sdkNetworkIp"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformMediaInfo.sdkNetworkIp"
-                  :placeholder="$t('accessPlatform.inputAccessPublicIP')"
-                />
+              <el-form-item :label="$t('accessPlatform.accessPublicIP') + '：'" prop="platformMediaInfo.sdkNetworkIp"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformMediaInfo.sdkNetworkIp"
+                  :placeholder="$t('accessPlatform.inputAccessPublicIP')" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.SDKpublicNetworkPort') + '：'"
-                prop="platformMediaInfo.sdkNetworkPort"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformMediaInfo.sdkNetworkPort"
-                  :placeholder="$t('accessPlatform.inputSDKpublicNetworkPort')"
-                />
+              <el-form-item :label="$t('accessPlatform.SDKpublicNetworkPort') + '：'"
+                prop="platformMediaInfo.sdkNetworkPort" :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input v-model="form.platformMediaInfo.sdkNetworkPort"
+                  :placeholder="$t('accessPlatform.inputSDKpublicNetworkPort')" />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20" v-if="ifShowMediaItem">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.SDKaccess')"
-                prop="platformMediaInfo.sdkIntranetIp"
-                :label-width="locale == 'en' ? '285px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformMediaInfo.sdkIntranetIp"
-                  :placeholder="$t('accessPlatform.inputSDKaccess')"
-                />
+              <el-form-item :label="$t('accessPlatform.SDKaccess')" prop="platformMediaInfo.sdkIntranetIp"
+                :label-width="locale == 'en' ? '285px' : '142px'">
+                <el-input v-model="form.platformMediaInfo.sdkIntranetIp"
+                  :placeholder="$t('accessPlatform.inputSDKaccess')" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.SDKaccessPort')"
-                prop="platformMediaInfo.sdkIntranetPort"
-                :label-width="locale == 'en' ? '300px' : '142px'"
-              >
-                <el-input
-                  v-model="form.platformMediaInfo.sdkIntranetPort"
-                  :placeholder="$t('accessPlatform.inputSDKaccessPort')"
-                />
+              <el-form-item :label="$t('accessPlatform.SDKaccessPort')" prop="platformMediaInfo.sdkIntranetPort"
+                :label-width="locale == 'en' ? '300px' : '142px'">
+                <el-input v-model="form.platformMediaInfo.sdkIntranetPort"
+                  :placeholder="$t('accessPlatform.inputSDKaccessPort')" />
               </el-form-item>
             </el-col>
           </el-row>
         </collapse-card>
 
         <!-- 平台参数配置 -->
-        <collapse-card
-          v-if="currentPlatType === PLATFORM_TYPE.AVS"
-          :title="$t('accessPlatform.avsConfig.title')"
-          v-model:collapse="show5"
-        >
+        <collapse-card v-if="currentPlatType === PLATFORM_TYPE.AVS" :title="$t('accessPlatform.avsConfig.title')"
+          v-model:collapse="show5">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.avsConfig.storageEnable') + '：'"
-                prop="avsConfig.storageEnable"
-              >
-                <el-switch
-                  v-model="form.avsConfig.storageEnable"
-                  active-color="#0085d0"
-                  inactive-color="#dee2e6"
-                />
+              <el-form-item :label="$t('accessPlatform.avsConfig.storageEnable') + '：'" prop="avsConfig.storageEnable">
+                <el-switch v-model="form.avsConfig.storageEnable" active-color="#0085d0" inactive-color="#dee2e6" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.avsConfig.storageServerAddr') + '：'"
-                prop="avsConfig.storageServerAddr"
-              >
-                <el-input
-                  v-model="form.avsConfig.storageServerAddr"
-                  :placeholder="$t('accessPlatform.avsConfig.inputStorageServerAddr')"
-                  clearable
-                />
+              <el-form-item :label="$t('accessPlatform.avsConfig.storageServerAddr') + '：'"
+                prop="avsConfig.storageServerAddr">
+                <el-input v-model="form.avsConfig.storageServerAddr"
+                  :placeholder="$t('accessPlatform.avsConfig.inputStorageServerAddr')" clearable />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.avsConfig.mediaServerAddr') + '：'"
-                prop="avsConfig.mediaServerAddr"
-              >
-                <el-input
-                  v-model="form.avsConfig.mediaServerAddr"
-                  :placeholder="$t('accessPlatform.avsConfig.inputMediaServerAddr')"
-                  clearable
-                />
+              <el-form-item :label="$t('accessPlatform.avsConfig.mediaServerAddr') + '：'"
+                prop="avsConfig.mediaServerAddr">
+                <el-input v-model="form.avsConfig.mediaServerAddr"
+                  :placeholder="$t('accessPlatform.avsConfig.inputMediaServerAddr')" clearable />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item
-                :label="$t('accessPlatform.avsConfig.accessGatewayConfig') + '：'"
-                prop="avsConfig.accessGatewayConfig"
-              >
-                <el-switch
-                  v-model="form.avsConfig.accessGatewayConfig"
-                  active-color="#0085d0"
-                  inactive-color="#dee2e6"
-                />
+              <el-form-item :label="$t('accessPlatform.avsConfig.accessGatewayConfig') + '：'"
+                prop="avsConfig.accessGatewayConfig">
+                <el-switch v-model="form.avsConfig.accessGatewayConfig" active-color="#0085d0"
+                  inactive-color="#dee2e6" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -565,78 +319,46 @@
 
             <el-row v-show="form.avsConfig.driveRadio == 1" :gutter="20">
               <el-col :span="12">
-                <el-form-item
-                  :label="$t('accessPlatform.avsConfig.serverDomain') + '：'"
-                  prop="avsConfig.serverDomain"
-                >
-                  <el-input
-                    v-model="form.avsConfig.serverDomain"
-                    :placeholder="$t('accessPlatform.avsConfig.inputServerDomain')"
-                    clearable
-                  />
+                <el-form-item :label="$t('accessPlatform.avsConfig.serverDomain') + '：'" prop="avsConfig.serverDomain">
+                  <el-input v-model="form.avsConfig.serverDomain"
+                    :placeholder="$t('accessPlatform.avsConfig.inputServerDomain')" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  :label="$t('accessPlatform.avsConfig.sipServerIp') + '：'"
-                  prop="avsConfig.sipServerIp"
-                >
-                  <el-input
-                    v-model="form.avsConfig.sipServerIp"
-                    :placeholder="$t('accessPlatform.avsConfig.inputSipServerIp')"
-                    clearable
-                  />
+                <el-form-item :label="$t('accessPlatform.avsConfig.sipServerIp') + '：'" prop="avsConfig.sipServerIp">
+                  <el-input v-model="form.avsConfig.sipServerIp"
+                    :placeholder="$t('accessPlatform.avsConfig.inputSipServerIp')" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  :label="$t('accessPlatform.avsConfig.sipServerPort') + '：'"
-                  prop="avsConfig.sipServerPort"
-                >
-                  <el-input
-                    v-model.number="form.avsConfig.sipServerPort"
-                    :placeholder="$t('accessPlatform.avsConfig.inputSipServerPort')"
-                    clearable
-                  />
+                <el-form-item :label="$t('accessPlatform.avsConfig.sipServerPort') + '：'"
+                  prop="avsConfig.sipServerPort">
+                  <el-input v-model.number="form.avsConfig.sipServerPort"
+                    :placeholder="$t('accessPlatform.avsConfig.inputSipServerPort')" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  :label="$t('accessPlatform.avsConfig.syncChannelNameEnable') + '：'"
-                  prop="avsConfig.syncChannelNameEnable"
-                >
-                  <el-switch
-                    v-model="form.avsConfig.syncChannelNameEnable"
-                    active-color="#0085d0"
-                    inactive-color="#dee2e6"
-                  />
+                <el-form-item :label="$t('accessPlatform.avsConfig.syncChannelNameEnable') + '：'"
+                  prop="avsConfig.syncChannelNameEnable">
+                  <el-switch v-model="form.avsConfig.syncChannelNameEnable" active-color="#0085d0"
+                    inactive-color="#dee2e6" />
                 </el-form-item>
               </el-col>
             </el-row>
 
             <el-row v-show="form.avsConfig.driveRadio == 2" :gutter="20">
               <el-col :span="12">
-                <el-form-item
-                  :label="$t('accessPlatform.avsConfig.accessServerIp') + '：'"
-                  prop="avsConfig.accessServerIp"
-                >
-                  <el-input
-                    v-model="form.avsConfig.accessServerIp"
-                    :placeholder="$t('accessPlatform.avsConfig.inputAccessServerIp')"
-                    clearable
-                  />
+                <el-form-item :label="$t('accessPlatform.avsConfig.accessServerIp') + '：'"
+                  prop="avsConfig.accessServerIp">
+                  <el-input v-model="form.avsConfig.accessServerIp"
+                    :placeholder="$t('accessPlatform.avsConfig.inputAccessServerIp')" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  :label="$t('accessPlatform.avsConfig.accessServerPort') + '：'"
-                  prop="avsConfig.accessServerPort"
-                >
-                  <el-input
-                    v-model.number="form.avsConfig.accessServerPort"
-                    :placeholder="$t('accessPlatform.avsConfig.inputAccessServerPort')"
-                    clearable
-                  />
+                <el-form-item :label="$t('accessPlatform.avsConfig.accessServerPort') + '：'"
+                  prop="avsConfig.accessServerPort">
+                  <el-input v-model.number="form.avsConfig.accessServerPort"
+                    :placeholder="$t('accessPlatform.avsConfig.inputAccessServerPort')" clearable />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -656,23 +378,10 @@
     </el-dialog>
 
     <!-- 网关选择 -->
-    <el-dialog
-      :title="$t('accessPlatform.gatewaySelection')"
-      v-model="showGateWay"
-      top="10vh"
-      width="1230px"
-      :close-on-click-modal="false"
-      :modal="false"
-      draggable
-    >
-      <gateway-choose
-        v-if="showGateWayChoose"
-        ref="gateWayChoose"
-        @getChooseGateWay="getGateWay"
-        :choosedAccessPlatType="choosedAccessPlatType"
-        :operation="$parent.operation"
-        :form="form"
-      ></gateway-choose>
+    <el-dialog :title="$t('accessPlatform.gatewaySelection')" v-model="showGateWay" top="10vh" width="1230px"
+      :close-on-click-modal="false" :modal="false" draggable>
+      <gateway-choose v-if="showGateWayChoose" ref="gateWayChoose" @getChooseGateWay="getGateWay"
+        :choosedAccessPlatType="choosedAccessPlatType" :operation="$parent.operation" :form="form"></gateway-choose>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogClosed1">{{ $t('public.cancel') }}</el-button>
@@ -821,7 +530,7 @@ export default {
         }
         callback()
       }
-        var regEn = /[<>?:"{})(*&^%$#@!~]/im
+      var regEn = /[<>?:"{})(*&^%$#@!~]/im
       var validatePass1 = (rule, value, callback) => {
         if (regEn.test(value)) {
           callback(new Error(this.$t('repo.cantContainSpecial')))
@@ -1314,6 +1023,7 @@ export default {
         this.showGateWayChoose = true
       })
 
+      console.log(1)
       this.choosedGateWay = {}
       this.form.gatewayGroup = ''
       if (val.length > 0 && this.$parent.operation) {
@@ -1425,8 +1135,9 @@ export default {
       let res = await this.$api.selectAdapterGateways(obj)
       if (
         res.resultCode === 0 &&
-        res.gatewayList.length > 0 &&
-        !res.gatewayList[0].allocationStatus
+        res.gatewayList.length > 0
+        //  &&
+        // !res.gatewayList[0].allocationStatus
       ) {
         tableData = res.gatewayList.filter(
           item => item.multipleIvsGroupName === res.gatewayList[0].multipleIvsGroupName
@@ -1615,6 +1326,7 @@ export default {
   .single-line {
     width: 100%;
     box-sizing: border-box;
+
     .el-textarea__inner {
       background: transparent;
       border-radius: 4px;
@@ -1623,10 +1335,12 @@ export default {
       color: #232c3b;
     }
   }
+
   .platformScaleCol {
     .el-form-item {
       width: 100%;
     }
+
     .el-input {
       width: 80% !important;
     }
@@ -1636,8 +1350,10 @@ export default {
     padding: 20px;
     background: #f8f8f9;
     border-radius: 4px;
+
     .el-radio-group {
       margin-bottom: 25px;
+
       .el-radio-button__inner {
         margin-right: 20px;
         font-size: 14px;
@@ -1645,7 +1361,8 @@ export default {
         color: #595959;
         background: transparent;
       }
-      .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+
+      .el-radio-button__orig-radio:checked+.el-radio-button__inner {
         border-radius: 100px;
         background: rgba(44, 109, 210, 0.1);
         color: #2c6dd2;

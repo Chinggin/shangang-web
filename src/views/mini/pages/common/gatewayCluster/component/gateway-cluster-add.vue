@@ -1,151 +1,64 @@
 <template>
   <div class="addGatewayClusterDialog">
-    <el-dialog
-      :title="
-        operation
-          ? $t('gatewayCluster.addGatewayCluster')
-          : $t('gatewayCluster.modifyGatewayCluster')
-      "
-      :visible.sync="$parent.dialogFormVisible"
-      top="10vh"
-      width="1000px"
-      :draggable='false'
-      @closed="dialogClosed"
-      @open="dialogOpen"
-    >
-      <el-form
-        ref="form"
-        :model="form"
-        :rules="rules"
-        :validate-on-rule-change="false"
-        :label-width="locale == 'en' ? '220px' : '145px'"
-        label-position="left"
-      >
+    <el-dialog :title="operation
+      ? $t('gatewayCluster.addGatewayCluster')
+      : $t('gatewayCluster.modifyGatewayCluster')
+      " :visible.sync="$parent.dialogFormVisible" top="10vh" width="1000px" :draggable='false' @closed="dialogClosed"
+      @open="dialogOpen">
+      <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false"
+        :label-width="locale == 'en' ? '220px' : '145px'" label-position="left">
         <el-form-item :label="$t('gatewayCluster.gatewayName') + '：'" prop="gatewayName">
-          <el-input
-            v-model="form.gatewayName"
-            auto-complete="off"
-            :placeholder="$t('gatewayCluster.gatewayNamePrompt')"
-            clearable
-          />
+          <el-input v-model="form.gatewayName" auto-complete="off" :placeholder="$t('gatewayCluster.gatewayNamePrompt')"
+            clearable />
         </el-form-item>
 
         <el-form-item :label="$t('gatewayCluster.accessPlatType') + '：'" prop="accessPlatType">
-          <el-cascader
-            :options="$parent.options"
-            :placeholder="$t('gatewayCluster.accessPlatTypePrompt')"
-            :props="{ expandTrigger: 'hover' }"
-            clearable
-            :show-all-levels="false"
-            v-model="form.accessPlatType"
-            :popper-append-to-body="false"
-            :disabled="!operation"
-            @change="changePlatType"
-          ></el-cascader>
+          <el-cascader :options="$parent.options" :placeholder="$t('gatewayCluster.accessPlatTypePrompt')"
+            :props="{ expandTrigger: 'hover' }" clearable :show-all-levels="false" v-model="form.accessPlatType"
+            :popper-append-to-body="false" :disabled="!operation" @change="changePlatType"></el-cascader>
         </el-form-item>
 
         <el-form-item :label="$t('gatewayCluster.associateServer') + '：'">
-          <el-input
-            ref="serverInput"
-            v-model="form.associateServer"
-            @focus="foucsServer"
-            :placeholder="$t('gatewayCluster.clickToAssociate')"
-            :disabled="!operation || associateServerLoading"
-          />
+          <el-input ref="serverInput" v-model="form.associateServer" @focus="foucsServer"
+            :placeholder="$t('gatewayCluster.clickToAssociate')" :disabled="!operation || associateServerLoading" />
         </el-form-item>
 
         <el-form-item :label="$t('gatewayCluster.gatewayGroupName') + '：'" prop="gatewayGroup">
-          <el-input
-            v-model="form.gatewayGroup"
-            auto-complete="off"
-            :placeholder="$t('gatewayCluster.associateAutoFill')"
-            clearable
-            disabled
-            v-if="resetItem"
-          />
+          <el-input v-model="form.gatewayGroup" auto-complete="off"
+            :placeholder="$t('gatewayCluster.associateAutoFill')" clearable disabled v-if="resetItem" />
         </el-form-item>
 
         <el-form-item :label="$t('gatewayCluster.gatewayIp') + '：'" prop="gatewayIp">
-          <el-input
-            v-model="form.gatewayIp"
-            auto-complete="off"
-            :placeholder="$t('gatewayCluster.associateAutoFill')"
-            clearable
-            disabled
-            v-if="resetItem"
-          />
+          <el-input v-model="form.gatewayIp" auto-complete="off" :placeholder="$t('gatewayCluster.associateAutoFill')"
+            clearable disabled v-if="resetItem" />
         </el-form-item>
 
-        <el-form-item
-          :label="$t('gatewayCluster.nodeContainerType') + '：'"
-          prop="nodeContainerType"
-        >
-          <el-select
-            clearable
-            :popper-append-to-body="false"
-            v-model="form.nodeContainerType"
-            :placeholder="$t('gatewayCluster.nodeContainerTypePrompt')"
-            :disabled="!operation"
-          >
-            <el-option
-              v-for="(item, index) in this.nodeContainerTypes"
-              :key="index"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-form-item :label="$t('gatewayCluster.nodeContainerType') + '：'" prop="nodeContainerType">
+          <el-select clearable :popper-append-to-body="false" v-model="form.nodeContainerType"
+            :placeholder="$t('gatewayCluster.nodeContainerTypePrompt')" :disabled="!operation">
+            <el-option v-for="(item, index) in this.nodeContainerTypes" :key="index" :label="item.name"
+              :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item
-          :label="$t('gatewayCluster.nodeAvailableType') + '：'"
-          prop="nodeAvailableType"
-          v-if="ifShowAva"
-        >
-          <el-select
-            clearable
-            :popper-append-to-body="false"
-            v-model="form.nodeAvailableType"
-            :placeholder="$t('gatewayCluster.nodeAvailableTypePrompt')"
-            :disabled="!operation"
-            @change="changeAva"
-          >
-            <el-option
-              v-for="(item, index) in $parent.nodeAvailableTypeList"
-              :key="index"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-form-item :label="$t('gatewayCluster.nodeAvailableType') + '：'" prop="nodeAvailableType" v-if="ifShowAva">
+          <el-select clearable :popper-append-to-body="false" v-model="form.nodeAvailableType"
+            :placeholder="$t('gatewayCluster.nodeAvailableTypePrompt')" :disabled="!operation" @change="changeAva">
+            <el-option v-for="(item, index) in $parent.nodeAvailableTypeList" :key="index" :label="item.name"
+              :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item
-          :label="$t('gatewayCluster.virtualIp') + '：'"
-          prop="virtualIp"
-          key="virtualIp"
-          v-if="form.nodeAvailableType == 1"
-        >
-          <el-input
-            v-model="form.virtualIp"
-            auto-complete="off"
-            :placeholder="$t('gatewayCluster.virtualIpPrompt')"
-            clearable
-            :disabled="!operation"
-          />
+        <el-form-item :label="$t('gatewayCluster.virtualIp') + '：'" prop="virtualIp" key="virtualIp"
+          v-if="form.nodeAvailableType == 1">
+          <el-input v-model="form.virtualIp" auto-complete="off" :placeholder="$t('gatewayCluster.virtualIpPrompt')"
+            clearable :disabled="!operation" />
         </el-form-item>
 
-        <el-form-item
-          :label="$t('gatewayCluster.gatewayNatIp') + '：'"
-          key="gatewayNatIp"
-          prop="gatewayNatIp"
-          v-if="form.nodeAvailableType == 1"
-        >
-          <el-input
-            v-model="form.gatewayNatIp"
-            auto-complete="off"
-            :placeholder="$t('gatewayCluster.gatewayNatIpPrompt')"
-            clearable
-            :disabled="!operation"
-          />
+        <el-form-item :label="$t('gatewayCluster.gatewayNatIp') + '：'" key="gatewayNatIp" prop="gatewayNatIp"
+          v-if="form.nodeAvailableType == 1">
+          <el-input v-model="form.gatewayNatIp" auto-complete="off"
+            :placeholder="$t('gatewayCluster.gatewayNatIpPrompt')" clearable :disabled="!operation" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -159,25 +72,10 @@
     </el-dialog>
 
     <!-- //服务器关联 -->
-    <el-dialog
-      v-if="showServer"
-      :title="$t('gatewayCluster.associateServer')"
-      v-model="showServer"
-      top="10vh"
-      width="1150px"
-      :close-on-click-modal="false"
-      :modal="false"
-      class="serverDialog"
-      draggable
-    >
-      <server-choose
-        :operation="operation"
-        :form="form"
-        :gatewayGroup="gatewayGroup"
-        :platGroupName="platGroupName"
-        @getChooseServer="getServer"
-        v-if="showServerChoose"
-      ></server-choose>
+    <el-dialog v-if="showServer" :title="$t('gatewayCluster.associateServer')" v-model="showServer" top="10vh"
+      width="1150px" :close-on-click-modal="false" :modal="false" class="serverDialog" draggable>
+      <server-choose :operation="operation" :form="form" :gatewayGroup="gatewayGroup" :platGroupName="platGroupName"
+        @getChooseServer="getServer" v-if="showServerChoose"></server-choose>
       <template #footer>
         <span class="dialog-footer" style="text-align: center">
           <el-button @click="dialogClosed1">{{ $t('public.cancel') }}</el-button>
@@ -269,7 +167,7 @@ export default {
         })
       }
       this.$nextTick(() => {
-        
+
         if (!this.operation) {
           this.form = this.$parent.dataForm
 
@@ -425,13 +323,13 @@ export default {
               this.ifShowAva = false
             }
 
-            this.nodeContainerTypes = this.$parent.nodeContainerTypeList.filter(item => {
-              if (accessPlatType.containerTypes) {
-                return accessPlatType.containerTypes.findIndex(it => it == item.value) >= 0
-              }
-              return true
-            })
-            this.platGroupName = accessPlatType.platGroupName
+            // this.nodeContainerTypes = this.$parent.nodeContainerTypeList.filter(item => {
+            //   if (accessPlatType.containerTypes) {
+            //     return accessPlatType.containerTypes.findIndex(it => it == item.value) >= 0
+            //   }
+            //   return true
+            // })
+            // this.platGroupName = accessPlatType.platGroupName
           }
         }
       }
@@ -448,7 +346,7 @@ export default {
       }
       this.showServerChoose = false
       this.$nextTick(() => {
-      this.gatewayGroup = this.form.gatewayGroup
+        this.gatewayGroup = this.form.gatewayGroup
         this.showServerChoose = true
       })
     },
@@ -465,12 +363,14 @@ export default {
           searchType: 1
         }
       }
+
       let res = await this.$api.selectNodeHealths(obj)
       this.associateServerLoading = false
       if (
         res.resultCode === 0 &&
-        res.nodeHealthInfos.length > 0 &&
-        !res.nodeHealthInfos[0].allocationStatus
+        res.nodeHealthInfos.length > 0
+        // &&
+        // !res.nodeHealthInfos[0].allocationStatus
       ) {
         tableData = res.nodeHealthInfos.filter(
           item => item.nodeGroup === res.nodeHealthInfos[0].nodeGroup
@@ -599,28 +499,33 @@ export default {
 .addGatewayClusterDialog {
   .el-dialog__body {
     .el-date-editor {
+
       .el-range-input,
       .el-range-separator {
         color: #262626;
       }
     }
   }
+
   .avatar-upload {
     width: 100px;
     height: 100px;
     line-height: 100px;
     cursor: pointer;
   }
+
   .avatar {
     width: 100px;
     height: 100px;
     display: inline-block;
   }
+
   .serverDialog {
     .el-dialog__body {
       padding: 20px;
     }
   }
+
   .el-cascader {
     width: 100%;
   }
