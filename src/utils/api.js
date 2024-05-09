@@ -355,6 +355,8 @@ export const modifyBossTag = (data) => fetch('/uas/v1/api/oba/cluster/bosstag/mo
     监控平台管理模块调用接口
     告警类型管理模块调用接口
 */
+//查询告警级别列表
+export const listAlarmLevelByPage= (data) => fetch('/uas/v1/api/ecs/alarm/level/list/page', data)
 // 导出告警中心数据
 export const exportAlarm = (data) => fetch('/uas/v1/api/alarm/export', data)
 // 查询告警类型信息

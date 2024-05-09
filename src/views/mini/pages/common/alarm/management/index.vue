@@ -9,79 +9,44 @@
         {{ $t('public.batchDeletion') }}
       </el-button>
     </div>
-    <div
-      style="height: 600px"
-      v-loading="loading"
-      :element-loading-text="$t('public.loading')"
-      
-    >
+    <div style="height: 600px" v-loading="loading" :element-loading-text="$t('public.loading')">
       <div v-if="!loading && !tableData.length" class="tableNOdata">
         <img src="@/assets/img/common/NOdata.png" alt />
         <p>{{ $t('public.noData') }}</p>
       </div>
 
-      <el-table
-        ref="multipleTable"
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%; margin-top: 20px"
-        @selection-change="handleSelectionChange"
-        class="elTable"
-        :element-loading-text="$t('public.loading')"
-        
-        border
-        v-if="!loading && tableData.length"
-      >
+      <el-table ref="multipleTable" v-loading="loading" :data="tableData" style="width: 100%; margin-top: 20px"
+        @selection-change="handleSelectionChange" class="elTable" :element-loading-text="$t('public.loading')" border
+        v-if="!loading && tableData.length">
         <template #empty>
           <span>{{ dataText }}</span>
         </template>
         <el-table-column label width="50" type="selection" :selectable="checkSelectable" />
-        <el-table-column
-          :label="$t('alarmList.alarmLevel')"
-          min-width="150"
-          :prop="locale == 'en' ? 'alarmLevelEnName' : 'alarmLevelName'"
-          show-overflow-tooltip
-        />
-        <el-table-column
-          :label="$t('alarmList.alarmWeight')"
-          prop="alarmLevelValue"
-          show-overflow-tooltip
-        />
+        <el-table-column :label="$t('alarmList.alarmLevel')" min-width="150"
+          :prop="locale == 'en' ? 'alarmLevelEnName' : 'alarmLevelName'" show-overflow-tooltip />
+        <el-table-column :label="$t('alarmList.alarmWeight')" prop="alarmLevelValue" show-overflow-tooltip />
         <el-table-column :label="$t('alarmList.color')" prop="color" show-overflow-tooltip>
           <template #default="{ row }">
-            <div
-              :style="'width:40%;min-height:30px;margin:auto;background-color:' + row.color"
-            ></div>
+            <div :style="'width:40%;min-height:30px;margin:auto;background-color:' + row.color"></div>
           </template>
         </el-table-column>
-        <el-table-column
-          :label="$t('alarmList.alarmType')"
-          prop="alarmTypeInfoList"
-          show-overflow-tooltip
-        >
+        <el-table-column :label="$t('alarmList.alarmType')" prop="alarmTypeInfoList" show-overflow-tooltip>
           <template #default="{ row }">
             {{
-              $t('alarmList.associated', {
-                num: row.alarmTypeInfoList ? row.alarmTypeInfoList.length : 0
-              })
-            }}
+    $t('alarmList.associated', {
+      num: row.alarmTypeInfoList ? row.alarmTypeInfoList.length : 0
+    })
+  }}
           </template>
         </el-table-column>
         <el-table-column :label="$t('alarmList.describe')" prop="remark" show-overflow-tooltip />
         <el-table-column :label="$t('public.operating')" min-width="120">
           <template #default="{ row }">
-            <span
-              class="cell-operate"
-              @click="handleEdit(row)"
-            >
+            <span class="cell-operate" @click="handleEdit(row)">
               {{ $t('public.edit') }}
             </span>
-            <span
-              v-has-permi="[78]"
-              v-if="row.alarmLevelId != 1 && row.alarmLevelId != 2 && row.alarmLevelId != 3"
-              class="cell-operate danger"
-              @click="handleDelete(row)"
-            >
+            <span v-has-permi="[78]" v-if="row.alarmLevelId != 1 && row.alarmLevelId != 2 && row.alarmLevelId != 3"
+              class="cell-operate danger" @click="handleDelete(row)">
               {{ $t('public.delete') }}
             </span>
           </template>
@@ -89,28 +54,15 @@
       </el-table>
 
       <!--分页-->
-      <pagination
-        v-if="!loading && tableData.length"
-        :total="totalNum"
-        v-model:pageNum="pageNum"
-        v-model:limit="pageSize"
-        @pagination="getListByPage"
-      ></pagination>
+      <pagination v-if="!loading && tableData.length" :total="totalNum" v-model:pageNum="pageNum"
+        v-model:limit="pageSize" @pagination="getListByPage"></pagination>
     </div>
     <!-- 添加修改对话框 -->
     <management-add></management-add>
     <!-- 批量操作 -->
-    <batch-operate
-      :multipleSelection="multipleSelection"
-      :what="$t('alarmList.alarmLevel')"
-      @getList="getTemplateList"
-      :operate="operate"
-      :batchApi="batchApi"
-      whatId="alarmLevelId"
-      whatName="alarmLevelName"
-      v-model:loading="loading"
-      v-model:visible="batchDialogVisible"
-    />
+    <batch-operate :multipleSelection="multipleSelection" :what="$t('alarmList.alarmLevel')" @getList="getTemplateList"
+      :operate="operate" :batchApi="batchApi" whatId="alarmLevelId" whatName="alarmLevelName" v-model:loading="loading"
+      v-model:visible="batchDialogVisible" />
   </div>
 </template>
 
@@ -257,6 +209,7 @@ export default {
         }
       }
       this.$api.listAlarmLevelByPage(data).then(res => {
+        console.log(res)
         if (res.alarmLevelList) {
           this.tableData = res.alarmLevelList
           this.totalNum = res.pageInfo.totalNum
